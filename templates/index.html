@@ -1,21 +1,33 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Let's book your next getaway!
-{% endblock %}
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Let's book your next getaway! {%
+endblock %} {% block main %}
 <div class="flex items-center justify-center">
-    <h1 class="py-4 text-teal-500 uppercase font-semibold">Search for your next dream vacation</h1>
+  <h1 class="py-4 text-teal-500 uppercase font-semibold">
+    Search for your next dream vacation
+  </h1>
 </div>
-<!-- <br> -->
-<form action="/location" method="POST" class="w-full max-w-lg py-4 mx-auto">
-    <div class="flex items-center border-b border-teal-500 py-2">
-      <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" name="destination" placeholder="New York">
-      <button class="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded" type="submit">
-        Search
-      </button>
-    </div>
-  </form>
+
+<form action="/hotels" method="POST" class="w-full max-w-lg py-4 mx-auto">
+  <div class="flex items-center border-b border-teal-500 py-2">
+    <input
+      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+      type="text"
+      name="destination"
+      placeholder="New York"
+    />
+    <button
+      class="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
+      type="submit"
+    >
+      Search
+    </button>
+  </div>
+</form>
+
+<h1 class="py-4 text-teal-500 uppercase font-semibold">
+  Need inspiration for your next trip?
+</h1>
+<h3 class="py-4 text-grey-500 uppercase font-semibold">
+  This month's top destinations are just a quick away
+</h3>
 
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %} 
+
+
+{% block title %} 
+Let's book your next getaway!
+{%endblock %} 
+
+{% block main %}
+
+<h1>We have found {{totalCount}} hotels available in {{ header }}</h1>
+
+{% for hotel in hotels %}
+<ul class="flex">
+  <li>
+    <div class="bg-yellow border rounded-lg overflow-hidden">
+      <img src="{{hotel.thumbnailUrl}}" alt="hotel image" />
+      <div class="p-6">
+        <h4>{{ hotel.name }}</h4>
+        <p>{{ hotel.starRating}} / 5 stars</p>
+      </div>
+    </div>
+  </li>
+</ul>
+{% endfor %}
+
+{% endblock %}

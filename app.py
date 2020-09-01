@@ -19,7 +19,7 @@ app.secret_key = environ.get('SECRET_KEY')
 def index():
     return render_template('index.html')
 
-@app.route("/location", methods=['GET', 'POST'])
+@app.route("/hotels", methods=['GET', 'POST'])
 def search_api():
     if request.method == 'GET':
         return render_template('index.html')
@@ -39,7 +39,8 @@ def search_api():
             totalCount = output['totalCount']
             # an array of hotels' list
             hotels = output['hotels']
-            return render_template('destination.html', header=header, totalCount=totalCount, hotels=hotels)    
+            print(hotels[0])
+            return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)    
 
 
 @app.route("/login", methods=['GET', 'POST'])
