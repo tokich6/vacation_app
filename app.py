@@ -1,16 +1,46 @@
+from os import environ
 from flask import Flask, render_template, request, redirect, session, flash
 # , flash, jsonify, session
-# from flask_session import Session
+# from flask.ext.session import Session
 # from tempfile import mkdtemp
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 # from werkzeug.security import check_password_hash, generate_password_hash
 
+from helpers import search_location_id, list_properties
+
 # Configure application
 app = Flask(__name__)
+
+# Set the sessions' secret key to some random bytes. 
+app.secret_key = environ.get('SECRET_KEY')
+
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route("/location", methods=['GET', 'POST'])
+def search_api():
+    if request.method == 'GET':
+        return render_template('index.html')
+    else:
+        destination = request.form.get('destination')
+        print(destination)
+        # search_location defined in helpers.py
+        destinationID = search_location_id(destination)
+        print(f'destinationID is: {destinationID}')
+        
+        if not destination:
+            flash('Please type in a location')
+            return redirect("/")
+        else:
+            output = list_properties(destinationID)
+            header = output['header']
+            totalCount = output['totalCount']
+            # an array of hotels' list
+            hotels = output['hotels']
+            return render_template('destination.html', header=header, totalCount=totalCount, hotels=hotels)    
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

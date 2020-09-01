@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Let's book your next getaway!
+{% endblock %}
+
+{% block main %}
+<!-- <div class="flex items-center justify-center"> -->
+    <h1>{{header}}</h1>
+    <h3>We have found {{totalCount}} available hotels in the area</h3>
+    {% for hotel in hotels %}
+    <ul>
+        <li>{{hotel}}</li>
+    </ul>
+    {% endfor %}
+    
+<!-- </div> -->
+
+
+
+{% endblock %}
