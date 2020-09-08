@@ -1,26 +1,56 @@
-{% extends "layout.html" %} 
-
-
-{% block title %} 
-Let's book your next getaway!
-{%endblock %} 
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Let's book your next getaway!
+{%endblock %} {% block main %}
 
 <h1>We have found {{totalCount}} hotels available in {{ header }}</h1>
 
-{% for hotel in hotels %}
-<ul class="flex">
-  <li>
-    <div class="bg-yellow border rounded-lg overflow-hidden">
-      <img src="{{hotel.thumbnailUrl}}" alt="hotel image" />
-      <div class="p-6">
-        <h4>{{ hotel.name }}</h4>
+
+<ul class="w-full p-4">
+  {% for hotel in hotels %}
+  <li class="flex items-center justify-around mt-2 mb-4 p-4 bg-gray-200 shadow-lg">
+    
+        <img class="shadow-lg" src="{{hotel.thumbnailUrl}}" alt="hotel image" />
+
+        <div class="p-6">
+
+          <h4 class="flex">
+            {{ hotel.name }} 
+             
+            <span class="flex items-center">
+              {% for star in range(5) %}
+              <svg class="mx-1 w-4 h-4 fill-current text-gray-400 {% if star <= hotel.starRating -1 %}text-yellow-500{% endif %}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+              {% endfor %}
+            </span>
+      
+          </h4>
+        <address>
+          {{hotel.address.streetAddress}}, {{ hotel.address.locality}},
+          {{hotel.address.region}}, {{hotel.address.postalCode}}
+        </address>
+
         <p>{{ hotel.starRating}} / 5 stars</p>
+
+        {% if hotel.guestReviews %}
+        <p>
+          {{ hotel.guestReviews.rating}} / {{ hotel.guestReviews.total}} total
+          reviews
+        </p>
+        {% endif %} {% if hotel.roomsLeft %}
+        <p>Available rooms: {{ hotel.roomsLeft}}</p>
+        {% endif %} 
+        <ul class="list-disc">
+          {% for landmark in hotel.landmarks %}
+          <li>{{landmark.distance}} to {{ landmark.label}}</li>
+          {% endfor %}
+        </ul>
+        
       </div>
-    </div>
+      <form action="/hotels/<hotelID>" method="POST">
+        <button type="submit" id="{{hotel.id}}" name="hotelID" class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded">
+          More details
+        </button>
+      </form>
   </li>
+  {% endfor %} 
 </ul>
-{% endfor %}
 
 {% endblock %}
