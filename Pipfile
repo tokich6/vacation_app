@@ -7,12 +7,12 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-psycopg2 = "*"
 psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 gunicorn = "*"
 requests = "*"
 python-dotenv = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"
