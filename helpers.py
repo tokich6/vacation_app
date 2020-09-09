@@ -30,7 +30,7 @@ def list_properties(id):
     try:
         url = "https://hotels4.p.rapidapi.com/properties/list"
         querystring = {"currency":"USD","locale":"en_US","sortOrder":"PRICE",
-        "destinationId":{id},"pageNumber":"1","checkIn":"2021-01-08","checkOut":"2021-01-15","pageSize":"25","adults1":"1"}
+        "destinationId":{id},"pageNumber":"1","checkIn":"2021-01-08","checkOut":"2021-01-15","pageSize":"25","adults1":"2"}
         headers = {
         'x-rapidapi-host': "hotels4.p.rapidapi.com",
         'x-rapidapi-key': API_KEY

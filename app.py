@@ -34,6 +34,7 @@ def search_api():
             flash('Please type in a location')
             return redirect("/")
         else:
+            # list_properties defined in helpers.py
             output = list_properties(destinationID)
             header = output['header']
             totalCount = output['totalCount']
@@ -41,6 +42,11 @@ def search_api():
             hotels = output['hotels']
             print(hotels[0])
             return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)    
+
+# @app.route("/hotels/<hotelID>", methods=['GET', 'POST'])
+# def show_hotel_details():
+
+#     return render_template('index.html')
 
 
 @app.route("/login", methods=['GET', 'POST'])

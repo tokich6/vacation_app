@@ -1,26 +1,93 @@
 {% extends "layout.html" %} 
 
-
-{% block title %} 
-Let's book your next getaway!
-{%endblock %} 
+{% block title %} Let's book your next getaway! {%endblock %} 
 
 {% block main %}
 
 <h1>We have found {{totalCount}} hotels available in {{ header }}</h1>
 
-{% for hotel in hotels %}
-<ul class="flex">
-  <li>
-    <div class="bg-yellow border rounded-lg overflow-hidden">
-      <img src="{{hotel.thumbnailUrl}}" alt="hotel image" />
-      <div class="p-6">
-        <h4>{{ hotel.name }}</h4>
-        <p>{{ hotel.starRating}} / 5 stars</p>
+<ul class="w-full p-4">
+  {% for hotel in hotels %}
+  <li
+    class="flex items-center justify-around mt-2 mb-4 p-4 bg-gray-300 shadow-lg"
+  >
+    <div>
+      <img class="shadow-lg" src="{{hotel.thumbnailUrl}}" alt="hotel image" />
+    </div>
+
+    <div class="hotel-details">
+      <h4 class="flex">
+        <span class="font-bold">{{ hotel.name }} </span>
+
+        <span class="inline-flex">
+          {% for star in range(5) %}
+          <svg
+            class="mx-0.8 w-4 h-4 fill-current text-gray-400 {% if star <= hotel.starRating -1 %}text-yellow-500{% endif %}"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+            />
+          </svg>
+          {% endfor %}
+        </span>
+      </h4>
+      <address class="mb-4">
+        {{hotel.address.streetAddress}}, {{ hotel.address.locality}},
+        {{hotel.address.region}}, {{hotel.address.postalCode}}
+      </address>
+
+      <div class="area-info">
+        {% if hotel.neighbourhood %}
+        <p class="inline-flex">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2c3.196 0 6 2.618 6 5.602 0 2.238-1.058 3.488-2.659 5.381-1.078 1.274-2.303 2.722-3.341 4.697-1.038-1.976-2.263-3.423-3.341-4.697-1.601-1.893-2.659-3.143-2.659-5.381 0-2.984 2.804-5.602 6-5.602zm0-2c-4.198 0-8 3.403-8 7.602 0 6.243 6.377 6.903 8 16.398 1.623-9.495 8-10.155 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"
+            />
+          </svg>
+          <span> {{ hotel.neighbourhood}} area </span>
+        </p>
+        {% endif %}
+
+        <ul class="list-disc">
+          {% for landmark in hotel.landmarks %}
+          <li>{{landmark.distance}} to {{ landmark.label}}</li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
+
+    <div class="card-side-container">
+      {% if hotel.guestReviews %}
+      <p class="mb-4">
+        <span class="font-bold"> {{ hotel.guestReviews.rating}}/10 </span> based
+        on {{ hotel.guestReviews.total}} guest reviews
+      </p>
+      {% endif %} {% if hotel.roomsLeft %} {% if hotel.roomsLeft > 1 %}
+      <p class="text-red-500 mb-4">Only {{ hotel.roomsLeft}} rooms left!</p>
+      {% else %}
+      <p class="text-red-500 mb-4">Only {{ hotel.roomsLeft}} room left!</p>
+      {% endif %} {% endif %}
+
+      <form action="/hotels/<hotelID>" method="POST">
+        <button
+          type="submit"
+          id="{{hotel.id}}"
+          name="hotelID"
+          class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+        >
+          More details
+        </button>
+      </form>
+    </div>
   </li>
+  {% endfor %}
 </ul>
-{% endfor %}
 
 {% endblock %}
