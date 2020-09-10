@@ -1,5 +1,5 @@
-{% extends "layout.html" %} {% block title %} Let's book your next getaway! {%
-endblock %} {% block main %}
+{% extends "layout.html" %} {% block title %} Let's book your next getaway!
+{%endblock %} {% block main %}
 <div class="flex items-center justify-center">
   <h1 class="py-4 text-teal-500 uppercase font-semibold">
     Search for your next dream vacation
@@ -7,20 +7,78 @@ endblock %} {% block main %}
 </div>
 
 <form action="/hotels" method="POST" class="w-full max-w-lg py-4 mx-auto">
-  <div class="flex items-center border-b border-teal-500 py-2">
-    <input
-      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-      type="text"
-      name="destination"
-      placeholder="New York"
-    />
-    <button
-      class="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
+  <section class= "border-b border-teal-500 py-2">
+    <div class="destination-search">
+      <label class="inline-block" for="destination">Where To</label>
+      <input
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="text"
+        name="destination"
+        placeholder="New York"
+      />
+    </div>
+    <div class="check-in-field">
+      <label class="inline-block" for="check-in">Check-in</label>
+      <input
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="date"
+        name="check-in"
+      />
+    </div>
+    <div class="check-out-field">
+      <label class="inline-block" for="check-out">Check-out</label>
+      <input
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="date"
+        name="check-out"
+      />
+    </div>
+    <div class="rooms-field mr-5">
+      <label
+        class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+        for="rooms"
+        >Rooms</label
+      >
+      <select
+        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        name="rooms"
+        id="rooms"
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="adults-room1 mr-5">
+      <label
+        class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+        for="adult1"
+        >Adults</label
+      >
+      <select
+        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        name="adult1"
+        id="adult1"
+      >
+        <option value="1">2</option>
+        <option value="2">1</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+     
+    <div class="search-field-btn">
+      <button
+      class="w-full inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase"
       type="submit"
     >
       Search
     </button>
-  </div>
+
+    </div>
+  </section>
 </form>
 
 <h1 class="py-4 text-teal-500 uppercase font-semibold">

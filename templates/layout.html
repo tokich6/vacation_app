@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
     <title>{% block title %}{% endblock %}</title>
 
@@ -43,7 +43,7 @@
         </div>
       </nav>
 
-      <main>{% block main %}{% endblock %}</main>
+      <main class="h-screen w-screen bg-yellow-200">{% block main %}{% endblock %}</main>
 
     <script>
         let navToggle = document.querySelector('#nav');
