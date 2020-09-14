@@ -6,7 +6,7 @@
 
 <h1>We have found {{totalCount}} hotels available in {{ header }}</h1>
 
-<section class="w-5/6 mx-auto flex p-6 bg-yellow">
+<section class="w-5/6 mx-auto flex p-6">
   <ul class="w-full p-4">
     {% for hotel in hotels %}
     <li
@@ -70,11 +70,15 @@
           <span class="font-bold"> {{ hotel.guestReviews.rating}}/10 </span> based
           on {{ hotel.guestReviews.total}} guest reviews
         </p>
-        {% endif %} {% if hotel.roomsLeft %} {% if hotel.roomsLeft > 1 %}
+        {% endif %} 
+        {% if hotel.roomsLeft %} {% if hotel.roomsLeft > 1 %}
         <p class="text-red-500 mb-4">Only {{ hotel.roomsLeft}} rooms left!</p>
         {% else %}
         <p class="text-red-500 mb-4">Only {{ hotel.roomsLeft}} room left!</p>
         {% endif %} {% endif %}
+        <p class="mb-4">
+          <span class="font-bold"> {{ hotel.ratePlan.price.current}} </span> average price/night {{ hotel.ratePlan.price.totalPricePerStay|safe}}
+        </p>
   
         <form action="/hotels/<hotelID>" method="POST">
           <button

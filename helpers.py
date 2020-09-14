@@ -3,6 +3,7 @@ import requests
 
 API_KEY = environ.get('API_KEY')
 
+# find the id of the typed in location/destination
 def search_location_id(location):
     # Contact API
     try:
@@ -25,12 +26,12 @@ def search_location_id(location):
         return None    
 
 
-def list_properties(id):
-    # contact api
+def list_properties(id, check_in, check_out, adults1):
+    # contact api and find available properties as per search parameteres
     try:
         url = "https://hotels4.p.rapidapi.com/properties/list"
         querystring = {"currency":"USD","locale":"en_US","sortOrder":"PRICE",
-        "destinationId":{id},"pageNumber":"1","checkIn":"2021-01-08","checkOut":"2021-01-15","pageSize":"25","adults1":"2"}
+        "destinationId":{id},"pageNumber":"1","checkIn":{check_in},"checkOut":{check_out},"pageSize":"25","adults1":{adults1}}
         headers = {
         'x-rapidapi-host': "hotels4.p.rapidapi.com",
         'x-rapidapi-key': API_KEY

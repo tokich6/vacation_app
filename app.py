@@ -24,9 +24,20 @@ def search_api():
     if request.method == 'GET':
         return render_template('index.html')
     else:
+        # extract parameters from the search form
         destination = request.form.get('destination')
         print(destination)
-        # search_location defined in helpers.py
+        check_in = request.form.get('check-in')
+        print(check_in)
+        check_out = request.form.get('check-out')
+        print(check_out)
+        rooms = request.form.get('rooms')
+        print(rooms)
+        adults_room1 = request.form.get('adult1')
+        print(adults_room1)
+
+
+        # search_location_id defined in helpers.py
         destinationID = search_location_id(destination)
         print(f'destinationID is: {destinationID}')
         
@@ -35,7 +46,7 @@ def search_api():
             return redirect("/")
         else:
             # list_properties defined in helpers.py
-            output = list_properties(destinationID)
+            output = list_properties(destinationID, check_in, check_out, adults_room1)
             header = output['header']
             totalCount = output['totalCount']
             # an array of hotels' list
