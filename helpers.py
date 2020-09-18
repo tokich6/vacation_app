@@ -30,7 +30,7 @@ def list_properties(id, check_in, check_out, adults1):
     # contact api and find available properties as per search parameteres
     try:
         url = "https://hotels4.p.rapidapi.com/properties/list"
-        querystring = {"currency":"USD","locale":"en_US","sortOrder":"PRICE",
+        querystring = {"currency":"USD","locale":"en_US","sortOrder":"GUEST_RATING",
         "destinationId":{id},"pageNumber":"1","checkIn":{check_in},"checkOut":{check_out},"pageSize":"25","adults1":{adults1}}
         headers = {
         'x-rapidapi-host': "hotels4.p.rapidapi.com",

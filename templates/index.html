@@ -2,12 +2,12 @@
 {%endblock %} {% block main %}
 <div class="flex items-center justify-center">
   <h1 class="py-4 text-teal-500 uppercase font-semibold">
-    Search for your next dream vacation
+    Let's find your next home away from home
   </h1>
 </div>
 
-<form action="/hotels" method="POST" class="w-full max-w-lg py-4 mx-auto">
-  <section class= "border-b border-teal-500 py-2">
+<form action="/hotels" method="POST" class="w-full max-w-lg py-4 mx-auto shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <!-- <section class= "border-b border-teal-500 py-2"> -->
     <div class="destination-search">
       <label class="inline-block" for="destination">Where To</label>
       <input
@@ -51,7 +51,7 @@
       </select>
     </div>
 
-    <div class="adults-room1 mr-5">
+    <div class="adults-room1 mr-5 mb-4">
       <label
         class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
         for="adult1"
@@ -68,6 +68,7 @@
         <option value="4">4</option>
       </select>
     </div>
+
      
     <div class="search-field-btn">
       <button
@@ -78,7 +79,7 @@
     </button>
 
     </div>
-  </section>
+  <!-- </section> -->
 </form>
 
 <h1 class="py-4 text-teal-500 uppercase font-semibold">
