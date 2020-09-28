@@ -21,12 +21,12 @@
   </h1>
   
 </div>
-<form action="/hotels" method="POST" class="w-full max-w-lg py-4 mx-auto shadow-md rounded px-8 pt-6 pb-8 mb-4">
+<form action="/hotels" method="POST" class="w-full max-w-xl py-4 mx-auto shadow-md rounded px-8 pt-6 pb-8 mb-4">
   <!-- <section class= "border-b border-teal-500 py-2"> -->
     <div class="destination-search">
       <label class="inline-block" for="destination">Where To</label>
       <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
         type="text"
         name="destination"
         placeholder="New York"
@@ -35,7 +35,7 @@
     <div class="check-in-field">
       <label class="inline-block" for="check-in">Check-in</label>
       <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
         type="date"
         name="check-in"
       />
@@ -43,7 +43,7 @@
     <div class="check-out-field">
       <label class="inline-block" for="check-out">Check-out</label>
       <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
         type="date"
         name="check-out"
       />
@@ -55,7 +55,7 @@
         >Rooms</label
       >
       <select
-        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
         name="rooms"
         id="rooms"
       >
@@ -73,7 +73,7 @@
         >Adults</label
       >
       <select
-        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
         name="adult1"
         id="adult1"
       >
@@ -87,7 +87,7 @@
      
     <div class="search-field-btn">
       <button
-      class="w-full inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase"
+      class="w-full inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase cursor-pointer"
       type="submit"
     >
       Search
@@ -97,11 +97,31 @@
   <!-- </section> -->
 </form>
 
-<h1 class="py-4 text-teal-500 uppercase font-semibold">
-  Need inspiration for your next trip?
-</h1>
-<h3 class="py-4 text-grey-500 uppercase font-semibold">
-  This month's top destinations are just a quick away
-</h3>
+
+<article class="grid grid-cols-2 gap-4">
+  <div>
+    <h1 class="py-4 text-teal-500 uppercase font-semibold">
+      Need inspiration for your next trip?
+    </h1>
+    <img src="../static/imgs/mohamed-ajufaan-dwIHrac2sEA-unsplash.jpg" alt="two coco trees on a beach">
+  </div>
+  
+  <div>
+    <h3 class="py-4 text-grey-500 uppercase font-semibold">
+      This month's top destinations are just a quick away
+    </h3>
+    <img src="../static/imgs/nadi-whatisdelirium-3VTZloIMFP0-unsplash.jpg" alt="">
+
+  </div>
+</article>
+
+<div>
+  <h3 class="py-4 text-grey-500 uppercase font-semibold">
+    Useful packing ideas
+  </h3>
+  <img src="../static/imgs/stil-TVllFyGaLEA-unsplash.jpg" alt="">
+
+</div>
+
 
 {% endblock %}
