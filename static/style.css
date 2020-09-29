@@ -4,10 +4,6 @@ html, body {
     position: relative;
 }
 
-/* .destination-search {
-    background-color: yellow;
-} */
-
 .listings-loading-circle {
     height: 25px;
     width: 25px;
