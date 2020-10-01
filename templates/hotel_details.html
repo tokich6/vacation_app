@@ -1,0 +1,13 @@
+{% extends "layout.html" %} 
+
+{% block title %} Let's book your next getaway! {%endblock %} 
+
+{% block main %}
+
+<h1>This is the hotel_details route</h1>
+
+{% if hotelID %}
+<p>the clicked hotel's id is {{ hotelID }}</p>
+{% endif %}
+
+{% endblock %}

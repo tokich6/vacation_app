@@ -15,14 +15,15 @@ app = Flask(__name__)
 app.secret_key = environ.get('SECRET_KEY')
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
 
 @app.route("/hotels", methods=['GET', 'POST'])
 def search_api():
     if request.method == 'GET':
-        return render_template('index.html')
+        return render_template('hotels.html')
     else:
         # extract parameters from the search form
         destination = request.form.get('destination')
@@ -39,7 +40,7 @@ def search_api():
 
         # search_location_id defined in helpers.py
         destinationID = search_location_id(destination)
-        print(f'destinationID is: {destinationID}')
+        # print(f'destinationID is: {destinationID}')
         
         if not destination:
             flash('Please type in a location')
@@ -52,13 +53,15 @@ def search_api():
             # an array of hotels' list
             hotels = output['hotels']
             print(hotels[0])
-            return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)    
+            return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
 
-# @app.route("/hotels/<hotelID>", methods=['GET', 'POST'])
-# def show_hotel_details():
 
-#     return render_template('index.html')
-
+@app.route("/hotels/<hotelID>", methods=['POST'])
+def show_hotel_details(hotelID):
+    hotel_id = request.form.get('hotel_id')
+    print(f'Hotel_id is: {hotel_id}')
+    return render_template('hotel_details.html', hotelID=hotel_id)
+    
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
