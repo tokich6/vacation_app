@@ -8,6 +8,64 @@
 
 {% if hotelID %}
 <p>the clicked hotel's id is {{ hotelID }}</p>
+<h1> {{ hotel_name }} </h1> 
+<span> {{ hotel_stars }} </span>
+<span> {{ hotel_address }}</span>
+
 {% endif %}
+
+
+<ul>
+    {% for line in tagline %}
+    <li> {{ line|safe  }} </li>
+    {% endfor %}
+</ul>
+
+{% if freebies %}
+{% for freeby in freebies %}
+<li> {{ freeby  }} </li>
+{% endfor %}
+{% endif %}
+
+
+<p>{{ hotel_price }}</p>
+
+<p>Room types: </p>
+<ul>
+    {% for room in hotel_rooms %}
+    <li> {{ room  }} </li>
+    {% endfor %}
+</ul>
+
+
+{% if amenities %}
+<p>Main amenities: </p>
+<ul>
+    {% for amenity in amenities%}
+    <li>{{ amenity }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if what_is_around %}
+<p>What's around: </p>
+<ul>
+    {% for around in what_is_around %}
+    <li>{{ around }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<ul>
+  {% for image in images_list %}
+    <li>
+    <img src={{image}} alt="">
+    </li>
+  {% endfor %}
+
+</ul>
+
+
 
 {% endblock %}

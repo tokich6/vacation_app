@@ -52,3 +52,53 @@ def list_properties(id, check_in, check_out, adults1):
         return None    
 
 
+def get_hotel_details(id, check_in, check_out, adults1):
+    # contact api to get individual hotel details
+    try:
+        url = "https://hotels4.p.rapidapi.com/properties/get-details"
+        querystring = {"locale":"en_US","currency":"USD","checkOut":{check_out},"adults1":{adults1},"checkIn":{check_in},"id":{id}}
+        headers = {
+        'x-rapidapi-host': "hotels4.p.rapidapi.com",
+        'x-rapidapi-key': API_KEY
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+    except requests.RequestException:
+        return None     
+
+     # Parse response
+    try:
+        result = response.json()
+        return {
+            'amenities': result['data']['body']['overview']['overviewSections'][0]['content'],
+            'what_is_around': result['data']['body']['overview']['overviewSections'][1]['content'],
+            'property_description': result['data']['body']['propertyDescription']
+            # 'totalCount':  result['data']['body']['searchResults']['totalCount'],
+            # 'hotels': result['data']['body']['searchResults']['results']
+        }
+    except (KeyError, TypeError, ValueError):
+        return None    
+
+
+
+def get_hotel_photos(id):
+    # contact api to get individual hotel details
+    try:
+        url = "https://hotels4.p.rapidapi.com/properties/get-hotel-photos"
+        querystring = {"id":{id}}
+        headers = {
+        'x-rapidapi-host': "hotels4.p.rapidapi.com",
+        'x-rapidapi-key': API_KEY
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+    except requests.RequestException:
+        return None     
+
+     # Parse response
+    try:
+        result = response.json()
+        return {
+            'hotel_images': result['hotelImages'],
+            'room_images': result['roomImages']
+        }
+    except (KeyError, TypeError, ValueError):
+        return None    
