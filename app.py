@@ -15,9 +15,9 @@ app = Flask(__name__)
 app.secret_key = environ.get('SECRET_KEY')
 
 # define global variables
-check_in = 'null'
-check_out = 'null'
-adults_room1 = 'null'
+check_in = ''
+check_out = ''
+adults_room1 = ''
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -31,7 +31,6 @@ def search_api():
     else:
         # extract parameters from the search form
         destination = request.form.get('destination')
-        print(destination)
         global check_in
         check_in = request.form.get('check-in')
         print(check_in)
@@ -45,14 +44,14 @@ def search_api():
         print(adults_room1)
 
         # search_location_id defined in helpers.py
-        destinationID = search_location_id(destination)
+        destination_id = search_location_id(destination)
         
         if not destination:
             flash('Please type in a location')
             return redirect("/")
         else:
             # list_properties defined in helpers.py
-            output = list_properties(destinationID, check_in, check_out, adults_room1)
+            output = list_properties(destination_id, check_in, check_out, adults_room1)
             header = output['header']
             totalCount = output['totalCount']
             # an array of hotels' list
@@ -63,6 +62,7 @@ def search_api():
 
 @app.route("/hotels/<hotelID>", methods=['GET', 'POST'])
 def show_hotel_details(hotelID):
+    # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
     print(f'Hotel_id is: {hotel_id}')
     print(check_in)
@@ -82,20 +82,19 @@ def show_hotel_details(hotelID):
     hotel_price = output_hotel_details['property_description']['featuredPrice']['currentPrice']['formatted']
     hotel_rooms = output_hotel_details['property_description']['roomTypeNames']
 
-
     # get_hotel_photos defined in helpers 
     output_hotel_photos = get_hotel_photos(hotel_id)
     hotel_images_list = output_hotel_photos['hotel_images']
-    # loop through images, format size & add to list
-    images_list = []
+    # loop through images, format size & add image urls to list
+    images_url_list = []
     for image in hotel_images_list:
         size = image['sizes'][0]['suffix']
         image_url = image['baseUrl'].format(size=size)
-        images_list.append(image_url)
+        images_url_list.append(image_url)
     
 
     return render_template('hotel_details.html', hotelID=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address,
-     hotel_price=hotel_price,amenities=amenities, what_is_around=what_is_around, tagline=tagline, freebies=freebies, hotel_rooms=hotel_rooms, images_list=images_list)
+     hotel_price=hotel_price,amenities=amenities, what_is_around=what_is_around, tagline=tagline, freebies=freebies, hotel_rooms=hotel_rooms, images_url_list=images_url_list)
     
 
 @app.route("/login", methods=['GET', 'POST'])

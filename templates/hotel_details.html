@@ -56,16 +56,18 @@
 </ul>
 {% endif %}
 
-
-<ul>
-  {% for image in images_list %}
-    <li>
-    <img src={{image}} alt="">
-    </li>
-  {% endfor %}
-
-</ul>
-
-
+  <!-- IMAGE CAROUSEL -->
+  {% if images_url_list %}
+  <div class="relative">
+    <div class="carousel-item">
+      {% for image in images_url_list %}
+        <img src={{image}} alt="" class="{% if loop.index == 1 %} active {% endif %}  absolute inset-0 w-screen h-screen flex items-center justify-center">   
+       {% endfor %}
+    </div>  
+    <div onclick="nextSlide()" class="fixed bottom-0 right-0 bg-white w-16 h-16 flex items-center justify-center text-black cursor-pointer">&#x276F;</div>
+    <div onclick="previousSlide()" class="fixed bottom-0 right-0 bg-white w-16 h-16 mr-16 border-r border-gray-400 flex items-center justify-center text-black cursor-pointer">&#x276E;</div>
+</div>
+{% endif %}
+  <!-- END IMAGE CAROUSEL -->
 
 {% endblock %}
