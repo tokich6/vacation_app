@@ -4,15 +4,13 @@
 
 {% block main %}
 
-<h1>This is the hotel_details route</h1>
+<section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
 
+<div class="lg:text-center">
 {% if hotelID %}
-<p>the clicked hotel's id is {{ hotelID }}</p>
-<h1> {{ hotel_name }} </h1> 
+<h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10"> {{ hotel_name }} </h1> 
 <span> {{ hotel_stars }} </span>
-<span> {{ hotel_address }}</span>
-
-{% endif %}
+<p class="mt-4 max-w-2xl text-xl leading-7 text-gray-500 lg:mx-auto"> {{ hotel_address }}</p>
 
 
 <ul>
@@ -20,6 +18,28 @@
     <li> {{ line|safe  }} </li>
     {% endfor %}
 </ul>
+{% endif %}
+</div>
+
+<!-- IMAGE CAROUSEL -->
+{% if images_url_list|length > 1 %}
+
+<div class="carousel-container relative">
+  <span> {{ images_url_list|length }} images </span>
+
+  {% for image in images_url_list %}
+  
+  <div class="mySlides fade">
+      <img src={{image}} alt="" class="absolute inset-0 w-full h-screen flex items-center justify-center">   
+  </div>  
+  {% endfor %}
+
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+{% endif %}
+<!-- END IMAGE CAROUSEL -->
+<!-- w-screen h-screen -->
 
 {% if freebies %}
 {% for freeby in freebies %}
@@ -56,18 +76,8 @@
 </ul>
 {% endif %}
 
-  <!-- IMAGE CAROUSEL -->
-  {% if images_url_list %}
-  <div class="relative">
-    <div class="carousel-item">
-      {% for image in images_url_list %}
-        <img src={{image}} alt="" class="{% if loop.index == 1 %} active {% endif %}  absolute inset-0 w-screen h-screen flex items-center justify-center">   
-       {% endfor %}
-    </div>  
-    <div onclick="nextSlide()" class="fixed bottom-0 right-0 bg-white w-16 h-16 flex items-center justify-center text-black cursor-pointer">&#x276F;</div>
-    <div onclick="previousSlide()" class="fixed bottom-0 right-0 bg-white w-16 h-16 mr-16 border-r border-gray-400 flex items-center justify-center text-black cursor-pointer">&#x276E;</div>
-</div>
-{% endif %}
-  <!-- END IMAGE CAROUSEL -->
+
+</section>
+
 
 {% endblock %}

@@ -1,5 +1,7 @@
 let navToggle = document.querySelector('#nav');
 let alert = document.querySelector('#error-alert');
+let slideIndex = 1;
+showSlides(slideIndex);
 
         
 function toggleNav() {
@@ -20,31 +22,24 @@ function hideAlert () {
 
 alert.addEventListener('click', hideAlert);
 
+// SLIDESHOW
 
-function nextSlide(){
-        let activeSlide = document.querySelector('.active');
-        console.log(activeSlide)
-        activeSlide.classList.remove('active');
-        activeSlide.classList.add('inactive');
-        
-        let nextSlide = activeSlide.nextElementSibling;
-        console.log(nextSlide)
-        nextSlide.classList.remove('inactive');
-        nextSlide.classList.add('active');
-    }
-    
-    function previousSlide(){
-        let activeSlide = document.querySelector('.active');
-        console.log(activeSlide)
-        activeSlide.classList.remove('active');
-        activeSlide.classList.add('inactive');
-        
-        let previousSlide = activeSlide.previousElementSibling;
-        console.log(previousSlide)
-        previousSlide.classList.remove('inactive');
-        previousSlide.classList.add('active');
-    }
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
 
 
+function showSlides(n) {
+  var i;
+  var slides = document.querySelectorAll('.mySlides');
+
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  slides[slideIndex-1].style.display = "block";
+}
 
 
