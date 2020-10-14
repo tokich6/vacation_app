@@ -1,5 +1,5 @@
-# Home Away
+# Home Away - hotel booking web application
 
-Python with Flask hotel booking app personal project.
+Python with Flask personal project.
 
 Data pulled from hotels.com API
