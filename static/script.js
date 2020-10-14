@@ -33,13 +33,16 @@ function plusSlides(n) {
 function showSlides(n) {
   var i;
   var slides = document.querySelectorAll('.mySlides');
+  var imgNum = document.querySelectorAll('.imageNumber');
 
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
+      slides[i].style.display = 'none';
+      imgNum[i].style.display = 'none';
   }
   slides[slideIndex-1].style.display = "block";
+  imgNum[slideIndex-1].style.display = 'block';
 }
 
 

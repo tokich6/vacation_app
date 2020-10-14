@@ -13,8 +13,8 @@ html, body {
 }
 
 .carousel-container {
-  max-width: 1000px;
-  max-height: 300px;
+  max-width: 80%;
+  height: auto;
   margin: auto;
 }  
 
@@ -22,6 +22,19 @@ html, body {
     display: none;
 }
 
+.imageNumber {
+  display: none;
+  color: #f2f2f2;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+  z-index: 99;
+}
+/* need to add media screen heights */
+.mySlides img {
+  max-height: 400px;
+  object-fit: cover;
+}
 .prev, .next {
     cursor: pointer;
     position: absolute;
@@ -65,3 +78,34 @@ html, body {
     from {opacity: .4}
     to {opacity: 1}
   }
+
+  body > main > section > div.mt-10.relative {
+    margin: 0 auto;
+    width: 80%;
+    margin-top: 2.5rem;
+  }
+
+  body > main > section > div.mt-10.relative > ul {
+    margin: 0 auto;
+    width: 80%;
+  }
+  ul {
+    list-style: none;
+  }
+
+
+  body > main > section > div > ul > li > div > ul > li:before {
+    content: '✓';
+    color: #38b2ac;
+  }
+
+  /* Show the dropdown menu on hover */
+/* .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+  .dropdown-content {
+    display: none;
+  } */
+
+  

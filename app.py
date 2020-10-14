@@ -18,6 +18,7 @@ app.secret_key = environ.get('SECRET_KEY')
 check_in = ''
 check_out = ''
 adults_room1 = ''
+rooms = ''
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -37,6 +38,7 @@ def search_api():
         global check_out
         check_out = request.form.get('check-out')
         print(check_out)
+        global rooms
         rooms = request.form.get('rooms')
         print(rooms)
         global adults_room1

@@ -1,83 +1,119 @@
-{% extends "layout.html" %} 
-
-{% block title %} Let's book your next getaway! {%endblock %} 
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Let's book your next getaway!
+{%endblock %} {% block main %}
 
 <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center .w-4/5">
+    {% if hotelID %}
+    <h1
+      class="mt-2 text-3xl leading-8 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
+    >
+      {{ hotel_name }}
+    </h1>
+    <span
+      class="inline-flex text-3xl leading-8 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
+    >
+      {% for star in range(5) %}
+      <svg
+        class="mx-0.8 w-4 h-4 fill-current text-gray-400 {% if star <= hotel_stars -1 %}text-yellow-500{% endif %}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+        />
+      </svg>
+      {% endfor %}
+    </span>
+    <ul>
+      {% for line in tagline %}
+      <li class="mt-2 leading-5 tracking-tight text-gray-900 sm:leading-7">
+        {{ line|safe }}
+      </li>
+      {% endfor %}
+    </ul>
+    <address class="mt-4 leading-3 text-gray-500 mx-auto">
+      {{ hotel_address }}
+    </address>
+    {% endif %} {% if freebies %} {% for freeby in freebies %}
+    <ul>
+      <li class="text-teal-500 mt-2">{{ freeby }}</li>
+    </ul>
 
-<div class="lg:text-center">
-{% if hotelID %}
-<h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10"> {{ hotel_name }} </h1> 
-<span> {{ hotel_stars }} </span>
-<p class="mt-4 max-w-2xl text-xl leading-7 text-gray-500 lg:mx-auto"> {{ hotel_address }}</p>
+    {% endfor %} {% endif %}
 
+  </div>
 
-<ul>
-    {% for line in tagline %}
-    <li> {{ line|safe  }} </li>
+  <!-- IMAGE CAROUSEL -->
+  {% if images_url_list|length > 1 %}
+
+  <div class="carousel-container relative">
+    {% for image in images_url_list %}
+    <span class="imageNumber">
+      {{loop.index}} / {{ images_url_list|length }}
+    </span>
+
+    <div class="mySlides fade">
+      <img src="{{image}}" alt="" class="relative w-full h-auto flex" />
+    </div>
     {% endfor %}
-</ul>
-{% endif %}
-</div>
 
-<!-- IMAGE CAROUSEL -->
-{% if images_url_list|length > 1 %}
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+  {% endif %}
+  <!-- END IMAGE CAROUSEL -->
 
-<div class="carousel-container relative">
-  <span> {{ images_url_list|length }} images </span>
+  <div class="mt-10 relative">
+    <ul class="md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+      <li>
+        <div class="flex">
+          {% if amenities %}
+          <ul>
+            <h4 class="text-lg leading-6 font-medium text-gray-900">
+              Main Amenities
+            </h4>
+            {% for amenity in amenities%}
+            <li class="mt-2 text-base leading-6 text-gray-700">
+              {{ amenity }}
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </li>
 
-  {% for image in images_url_list %}
-  
-  <div class="mySlides fade">
-      <img src={{image}} alt="" class="absolute inset-0 w-full h-screen flex items-center justify-center">   
-  </div>  
-  {% endfor %}
+      <li>
+        <div class="flex">
+          {% if what_is_around %}
+          <ul>
+            <h4 class="text-lg leading-6 font-medium text-gray-900">
+              What's around
+            </h4>
+            {% for around in what_is_around %}
+            <li class="mt-2 text-base leading-6 text-gray-700">{{ around }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </li>
+    </ul>
 
-  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-  <a class="next" onclick="plusSlides(1)">&#10095;</a>
-</div>
-{% endif %}
-<!-- END IMAGE CAROUSEL -->
-<!-- w-screen h-screen -->
-
-{% if freebies %}
-{% for freeby in freebies %}
-<li> {{ freeby  }} </li>
-{% endfor %}
-{% endif %}
-
-
-<p>{{ hotel_price }}</p>
-
-<p>Room types: </p>
-<ul>
-    {% for room in hotel_rooms %}
-    <li> {{ room  }} </li>
-    {% endfor %}
-</ul>
-
-
-{% if amenities %}
-<p>Main amenities: </p>
-<ul>
-    {% for amenity in amenities%}
-    <li>{{ amenity }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-{% if what_is_around %}
-<p>What's around: </p>
-<ul>
-    {% for around in what_is_around %}
-    <li>{{ around }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
+    <form action="/booking" method="POST" class="my-8">
+      <label for="rooms" class="dropdown inline-flex border-transparent py-1 px-2 uppercase text-teal-500">Choose your room type</label>
+      <select class="dropdown-content bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+      name="room" id="room">
+        {% for room in hotel_rooms %}
+        <option value="{{ room }}">{{ room }}</option>
+        {% endfor %}
+      </select>
+      <button
+        class="inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase cursor-pointer"
+        type="submit"
+      >
+        Book from {{ hotel_price }}  / per night
+      </button>
+    </form>
+  </div>
 </section>
-
 
 {% endblock %}
