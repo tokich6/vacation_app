@@ -14,7 +14,7 @@
     >
       {% for star in range(5) %}
       <svg
-        class="mx-0.8 w-4 h-4 fill-current text-gray-400 {% if star <= hotel_stars -1 %}text-yellow-500{% endif %}"
+        class="star mx-0.8 w-4 h-4 fill-current text-gray-400 {% if star <= hotel_stars -1 %}text-yellow-500{% endif %}"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
       >
@@ -98,16 +98,16 @@
       </li>
     </ul>
 
-    <form action="/booking" method="POST" class="my-8">
-      <label for="rooms" class="dropdown inline-flex border-transparent py-1 px-2 uppercase text-teal-500">Choose your room type</label>
-      <select class="dropdown-content bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+    <form action="/booking" method="POST" class="flex justify-around flex-wrap my-8">
+      <label for="rooms" class="dropdown inline-flex">Choose your room type</label>
+      <select class="dropdown-content bg-transparent bg-transparent py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
       name="room" id="room">
         {% for room in hotel_rooms %}
         <option value="{{ room }}">{{ room }}</option>
         {% endfor %}
       </select>
       <button
-        class="inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase cursor-pointer"
+       class="inline-flex justify-end bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 mt-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
         type="submit"
       >
         Book from {{ hotel_price }}  / per night

@@ -11,10 +11,10 @@
 
 </head>
 
-<body>
+<body class="bg-yellow-200">
     <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
-            <img src="../static/imgs/hotelbed-logo.jpg" alt="hotel bed" width="40px" height="30px">
+            <img src="../static/imgs/hotelbed-logo.jpg" alt="hotel bed" width="40px" height="30px" class="rounded">
               <span class="font-semibold text-xl tracking-tight px-2">
             <a href="/">Home Away</a>
           </span>
@@ -43,9 +43,13 @@
         </div>
       </nav>
 
-      <main class="bg-yellow-200">{% block main %}
+      <main class="my-8">{% block main %} {% endblock %}</main>
+
+      <footer class="flex items-center justify-center flex-wrap bg-teal-500 p-6">
+        <h1>Home Away @2020 All rights reserved. </h1>
+
+      </footer>  
         
-        {% endblock %}</main>
         <script src="{{url_for('static', filename='script.js')}}"></script>
 </body>
 </html>

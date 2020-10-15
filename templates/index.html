@@ -1,127 +1,154 @@
-{% extends "layout.html" %} {% block title %} Let's book your next getaway!
-{%endblock %} {% block main %}
+{% extends "layout.html" %} 
+{% block title %} Let's book your next getaway! {%endblock %} 
 
+{% block main %} 
 {% for message in get_flashed_messages() %}
 
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" id="error-alert">
+<div
+  class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+  role="alert"
+  id="error-alert"
+>
   <strong class="font-bold">Holy smokes!</strong>
   <span class="block sm:inline"> {{ message }} </span>
   <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-    <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+    <svg
+      class="fill-current h-6 w-6 text-red-500"
+      role="button"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+    >
+      <title>Close</title>
+      <path
+        d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+      />
+    </svg>
   </span>
 </div>
-    
-    {% endfor %}   
+
+{% endfor %}
 
 <div class="flex items-center justify-center">
-
-
   <h1 class="py-4 text-teal-500 uppercase font-semibold">
     Let's find your next home away from home
   </h1>
-  
 </div>
-<form action="/hotels" method="POST" class="w-full max-w-xl py-4 mx-auto shadow-md rounded px-8 pt-6 pb-8 mb-4">
+<form
+  action="/hotels"
+  method="POST"
+  class="w-full max-w-xl py-4 mx-auto bg-gray-300 shadow-lg rounded px-8 pt-6 pb-8 mb-4"
+>
   <!-- <section class= "border-b border-teal-500 py-2"> -->
-    <div class="destination-search">
-      <label class="inline-block" for="destination">Where To</label>
-      <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
-        type="text"
-        name="destination"
-        placeholder="New York"
-      />
-    </div>
-    <div class="check-in-field">
-      <label class="inline-block" for="check-in">Check-in</label>
-      <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-        type="date"
-        name="check-in"
-      />
-    </div>
-    <div class="check-out-field">
-      <label class="inline-block" for="check-out">Check-out</label>
-      <input
-        class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-        type="date"
-        name="check-out"
-      />
-    </div>
-    <div class="rooms-field mr-5">
-      <label
-        class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
-        for="rooms"
-        >Rooms</label
-      >
-      <select
-        class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
-        name="rooms"
-        id="rooms"
-      >
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
+  <div class="destination-search">
+    <label class="inline-block" for="destination">Where To</label>
+    <input
+      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+      type="text"
+      name="destination"
+      placeholder="New York"
+    />
+  </div>
+  <div class="check-in-field">
+    <label class="inline-block" for="check-in">Check-in</label>
+    <input
+      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+      type="date"
+      name="check-in"
+    />
+  </div>
+  <div class="check-out-field">
+    <label class="inline-block" for="check-out">Check-out</label>
+    <input
+      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+      type="date"
+      name="check-out"
+    />
+  </div>
+  <div class="rooms-field mr-5">
+    <label
+      class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+      for="rooms"
+      >Rooms</label
+    >
+    <select
+      class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+      name="rooms"
+      id="rooms"
+    >
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </div>
 
-    <div class="adults-room1 mr-5 mb-4">
-      <label
-        class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
-        for="adult1"
-        >Adults</label
-      >
-      <select
-        class="bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
-        name="adult1"
-        id="adult1"
-      >
-        <option value="2">2</option>
-        <option value="1">1</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
+  <div class="adults-room1 mr-5 mb-4">
+    <label
+      class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+      for="adult1"
+      >Adults</label
+    >
+    <select
+      class="bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+      name="adult1"
+      id="adult1"
+    >
+      <option value="2">2</option>
+      <option value="1">1</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </div>
 
-     
-    <div class="search-field-btn">
-      <button
-      class="w-full inline-flex border-transparent border-4 bg-teal-500 hover:bg-teal-300 py-1 px-2 uppercase cursor-pointer"
+  <div class="search-field-btn">
+    <button
+      class="w-full inline-flex bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded uppercase"
       type="submit"
     >
       Search
     </button>
-
-    </div>
+  </div>
   <!-- </section> -->
 </form>
 
-
-<article class="grid grid-cols-2 gap-4">
-  <div>
+<article class="md:grid-cols-3 md:grid sm:grig-cols-2 md:gap-x-8 md:gap-y-10 mb-4">
+  <div class="relative mx-auto w-4/5">
     <h1 class="py-4 text-teal-500 uppercase font-semibold">
       Need inspiration for your next trip?
     </h1>
-    <img src="../static/imgs/coco-trees.jpg" alt="two coco trees on a beach">
+    <div class="index-image-container">
+      <img
+        src="../static/imgs/coco-trees.jpg"
+        alt="two coco trees on a beach"
+        class="w-full h-auto"
+      />
+    </div>
   </div>
-  
-  <div>
-    <h3 class="py-4 text-grey-500 uppercase font-semibold">
-      This month's top destinations are just a quick away
-    </h3>
-    <img src="../static/imgs/mountain.jpg" alt="girl sat near a mountain lake">
 
+  <div class="relative mx-auto w-4/5">
+    <h3 class="py-4 text-grey-500 uppercase font-semibold">
+      This month's top destinations
+    </h3>
+    <div class="index-image-container">
+      <img
+        src="../static/imgs/mountain.jpg"
+        alt="girl sat near a mountain lake"
+        class="w-full h-auto"
+      />
+    </div>
+  </div>
+  <div class="relative mx-auto w-4/5">
+    <h3 class="py-4 text-grey-500 uppercase font-semibold">
+      Useful packing ideas
+    </h3>
+    <div class="index-image-container">
+      <img
+        src="../static/imgs/packing.jpg"
+        alt="travel essentials - beach hat, flip flops, camera, etc"
+        class="w-full h-auto"
+      />
+    </div>
   </div>
 </article>
-
-<div>
-  <h3 class="py-4 text-grey-500 uppercase font-semibold">
-    Useful packing ideas
-  </h3>
-  <img src="../static/imgs/packing.jpg" alt="travel essentials - beach hat, flip flops, camera, etc">
-
-</div>
-
 
 {% endblock %}

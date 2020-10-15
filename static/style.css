@@ -4,6 +4,16 @@ html, body {
     position: relative;
 }
 
+.star {
+  height: 1.5rem;
+}
+
+.index-image-container {
+  /* max-height: 700px; */
+  object-fit: cover;
+}
+
+
 .listings-loading-circle {
     height: 25px;
     width: 25px;

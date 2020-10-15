@@ -1,8 +1,8 @@
 let navToggle = document.querySelector('#nav');
 let alert = document.querySelector('#error-alert');
+
 let slideIndex = 1;
 showSlides(slideIndex);
-
         
 function toggleNav() {
   console.log('btn clicked');
