@@ -1,28 +1,40 @@
-let navToggle = document.querySelector('#nav');
+let navToggle = document.querySelector('.nav');
 let alert = document.querySelector('#error-alert');
-
+let btn = document.querySelector('#btn');
 let slideIndex = 1;
+
+btn.addEventListener('click', toggleNav);
+
 showSlides(slideIndex);
-        
+
+
+// FUNCTIONS
+
 function toggleNav() {
-  console.log('btn clicked');
-  if (!navToggle.classList.contains('hidden')) {
-          navToggle.classList.add('hidden');
-  } else {
-          navToggle.classList.remove('hidden');
-  }
-}   
-
-let btnToggle = document.querySelector('#btn').addEventListener('click', toggleNav);
-
-
-function hideAlert () {
-   alert.classList.add('hidden');
+  navToggle.classList.toggle('showNav');
 }
 
-alert.addEventListener('click', hideAlert);
+function hideAlert() {
+  alert.classList.add('hidden');
+}
 
-// SLIDESHOW
+// carousel image
+function showSlides(n) {
+  if (window.location.href.indexOf("hotelID") > -1) {
+    let i;
+    let slides = document.querySelectorAll('.mySlides');
+    let imgNum = document.querySelectorAll('.imageNumber');
+
+    if (n > slides.length) { slideIndex = 1 }
+    if (n < 1) { slideIndex = slides.length }
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = 'none';
+      imgNum[i].style.display = 'none';
+    }
+    slides[slideIndex - 1].style.display = "block";
+    imgNum[slideIndex - 1].style.display = 'block';
+  }
+}
 
 // Next/previous controls
 function plusSlides(n) {
@@ -30,19 +42,6 @@ function plusSlides(n) {
 }
 
 
-function showSlides(n) {
-  var i;
-  var slides = document.querySelectorAll('.mySlides');
-  var imgNum = document.querySelectorAll('.imageNumber');
 
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = 'none';
-      imgNum[i].style.display = 'none';
-  }
-  slides[slideIndex-1].style.display = "block";
-  imgNum[slideIndex-1].style.display = 'block';
-}
 
 

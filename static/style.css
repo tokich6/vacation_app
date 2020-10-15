@@ -4,6 +4,17 @@ html, body {
     position: relative;
 }
 
+
+@media screen and (max-width: 1023px) {
+  .nav {
+   display: none;
+  }
+  .showNav {
+   display: block;
+  }
+}
+
+
 .star {
   height: 1.5rem;
 }
