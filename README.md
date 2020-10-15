@@ -1,3 +1,5 @@
-# vacation_app
+# Home Away - hotel booking web application
 
-Python with Flask vacation app personal project.
+Python with Flask personal project
+
+Data pulled from hotels.com API
