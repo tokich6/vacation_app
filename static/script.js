@@ -3,10 +3,9 @@ let alert = document.querySelector('#error-alert');
 let btn = document.querySelector('#btn');
 let slideIndex = 1;
 
-btn.addEventListener('click', toggleNav);
-
 showSlides(slideIndex);
 
+btn.addEventListener('click', toggleNav);
 
 // FUNCTIONS
 
@@ -20,7 +19,7 @@ function hideAlert() {
 
 // carousel image
 function showSlides(n) {
-  if (window.location.href.indexOf("hotelID") > -1) {
+  if (window.location.href.indexOf("details") > -1) {
     let i;
     let slides = document.querySelectorAll('.mySlides');
     let imgNum = document.querySelectorAll('.imageNumber');
@@ -33,6 +32,7 @@ function showSlides(n) {
     }
     slides[slideIndex - 1].style.display = "block";
     imgNum[slideIndex - 1].style.display = 'block';
+    console.log('showSlides was called');
   }
 }
 

@@ -26,7 +26,7 @@ def index():
 
 
 @app.route("/hotels", methods=['GET', 'POST'])
-def search_api():
+def list_hotels():
     if request.method == 'GET':
         return render_template('hotels.html')
     else:
@@ -62,8 +62,8 @@ def search_api():
             return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
 
 
-@app.route("/hotels/<hotelID>", methods=['GET', 'POST'])
-def show_hotel_details(hotelID):
+@app.route("/hotels/details", methods=['GET', 'POST'])
+def show_hotel_details():
     # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
     print(f'Hotel_id is: {hotel_id}')
@@ -98,6 +98,10 @@ def show_hotel_details(hotelID):
     return render_template('hotel_details.html', hotelID=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address,
      hotel_price=hotel_price,amenities=amenities, what_is_around=what_is_around, tagline=tagline, freebies=freebies, hotel_rooms=hotel_rooms, images_url_list=images_url_list)
     
+@app.route("/booking", methods=['GET', 'POST'])
+def confirm_booking():
+    return render_template('booking.html')
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -140,6 +144,8 @@ def login():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     return render_template('register.html')
+
+
 
 if __name__ == '__main__':
     app.debug = True
