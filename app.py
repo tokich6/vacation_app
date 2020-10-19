@@ -14,6 +14,15 @@ from helpers import search_location_id, list_properties, get_hotel_details, get_
 # Configure application
 app = Flask(__name__)
 
+# Set the sessions' secret key to some random bytes. 
+app.secret_key = environ.get('SECRET_KEY')
+
+# define global variables
+check_in = ''
+check_out = ''
+adults_room1 = ''
+rooms = ''
+
 # DATABASE SETUP AND SCHEMAS START
 ENV = 'dev'
 if ENV == 'dev':
@@ -30,7 +39,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # initialize db
 db = SQLAlchemy(app)
 
-# define schemas
+# schemas
 class Profile(db.Model):
     __tablename__ = 'profile'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -38,21 +47,12 @@ class Profile(db.Model):
     email = db.Column(db.String(100), unique = True, nullable = False)
     hash = db.Column(db.Text, nullable=False)
 
-def __init__(self, username, email, hash):
-    self.username = username
-    self.email = email
-    self.hash = hash
+    def __init__(self, username, email, hash):
+        self.username = username
+        self.email = email
+        self.hash = hash
 
 # DATABASE SETUP AND SCHEMAS END
-
-# Set the sessions' secret key to some random bytes. 
-app.secret_key = environ.get('SECRET_KEY')
-
-# define global variables
-check_in = ''
-check_out = ''
-adults_room1 = ''
-rooms = ''
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -137,14 +137,64 @@ def show_hotel_details():
 def confirm_booking():
     return render_template('booking.html')
 
+@app.route("/register", methods=['GET', 'POST'])
+def register_user():
+    if request.method == "POST":
+        # Ensure username was submitted
+        username = request.form.get("username")
+        if not username:
+            flash("Please provide a username", 403)
+            return redirect ('/register')
+        # Query database for username
+        elif db.session.query(Profile).filter(Profile.username == username).count() != 0:
+            flash("The username already exists, please log in if previously registered or choose a different one", 403)
+            return redirect ('/register')
+
+        email = request.form.get("email")
+        if not email:
+            flash('please provide an email address', 403)
+            return redirect('/register')
+        elif db.session.query(Profile).filter(Profile.email == email).count() != 0:
+            flash("The email address you entered is already associated with an account, please log in", 403)
+            return redirect ('/login')    
+
+        password = request.form.get("password")
+        # Ensure password was submitted
+        if not password:
+            flash("must provide password", 403)
+            return redirect ('/register')
+
+        confirm_password = request.form.get("confirm-password")
+        # enfure confirmation was submitted and matches the password
+        if not confirm_password:
+            flash("must confirm password", 403)
+            return redirect ('/register')
+        elif confirm_password != password:
+            flash("confirm password is not a match", 403)
+            return redirect ('/register')
+
+        # hash the password
+        hash = generate_password_hash(password)
+
+        # enter data into database 
+        data = Profile(username, email, hash)
+        db.session.add(data)
+        db.session.commit()
+        # success
+        flash('You have registered successfully!')
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("register.html")
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     # Forget any user_id
-    # session.clear()
+    session.clear()
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-
         # Ensure username was submitted
         if not request.form.get("username"):
             flash("must provide username", 403)
@@ -155,82 +205,31 @@ def login():
             flash("must provide password", 403)
             return redirect ('/login')
 
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
-        username = rows[0]['username']
-
+        rows = db.session.query(Profile).filter(Profile.username == request.form.get('username')).all()
+        
+        match = check_password_hash(rows[0].hash, request.form.get("password"))
+        
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            flash("invalid username and/or password", 403)
+        if len(rows) != 1 or not match:
+            flash("invalid username and/or password, please try again", 403)
             return redirect ('/login')
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0].id
 
         flash('You were successfully logged in')
-        # Redirect user to home page
-        return redirect("/account")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template('login.html')    
-
-@app.route("/register", methods=['GET', 'POST'])
-def register_user():
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-
-        # Ensure username was submitted
-        username = request.form.get("username")
-        if not username:
-            flash("must provide username", 403)
-            return redirect ('/register')
-
-        # Query database for username
-        # duplicate = db.execute("SELECT * FROM users WHERE username = :username",
-        #                   username=username)
-        # if duplicate:
-        #     flash("This username already exists, please choose a different one", 403)
-        #     return redirect ('/register')
-
-        email = request.form.get("email")
-        if not email:
-            flash('please provide an email address', 403)
-            return redirect('/register')
-
-        password = request.form.get("password")
-        # Ensure password was submitted
-        if not password:
-            flash("must provide password", 403)
-            return redirect ('/register')
-
-        confirmation = request.form.get("confirm-password")
-        # enfure confirmation was submitted and matches the password
-        if not confirmation:
-            flash("must confirm password", 403)
-            return redirect ('/register')
-        elif confirmation != password:
-            flash("confirm password is not a match", 403)
-            return redirect ('/register')
-
-        # hash the password
-        hash = generate_password_hash(password)
-
-        print(username)
-        print(email)
-        print(hash)
-
-        # insert into database
-        # db.execute("INSERT INTO users(username, hash) VALUES(:username, :hash)", username=username, hash=hash);
-
         # Redirect user to home page
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("register.html")
+        return render_template('login.html')    
 
+@app.route("/logout")
+def logout():
+    # Forget any user_id
+    session.clear()
+    return redirect("/")
 
 
 if __name__ == '__main__':
