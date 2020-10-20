@@ -59,7 +59,6 @@ class Profile(db.Model):
 def index():
     return render_template('index.html')
 
-
 @app.route("/hotels", methods=['GET', 'POST'])
 def list_hotels():
     if request.method == 'GET':
@@ -95,7 +94,6 @@ def list_hotels():
             hotels = output['hotels']
             # print(hotels[0])
             return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
-
 
 @app.route("/hotels/details", methods=['GET', 'POST'])
 def show_hotel_details():
@@ -135,7 +133,11 @@ def show_hotel_details():
     
 @app.route("/booking", methods=['GET', 'POST'])
 def confirm_booking():
-    return render_template('booking.html')
+    return render_template('confirm_booking.html')
+
+@app.route("/account", methods=['GET', 'POST'])
+def your_bookings():
+    return render_template('your_bookings.html')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
@@ -187,7 +189,6 @@ def register_user():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
-
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
