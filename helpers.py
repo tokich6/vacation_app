@@ -1,5 +1,8 @@
 from os import environ
 import requests
+from flask import redirect, render_template, request, session
+from functools import wraps
+
 
 API_KEY = environ.get('API_KEY')
 
@@ -25,7 +28,6 @@ def search_location_id(location):
     except (KeyError, TypeError, ValueError):
         return None    
 
-
 def list_properties(id, check_in, check_out, adults1):
     # contact api and find available properties as per search parameteres
     try:
@@ -50,7 +52,6 @@ def list_properties(id, check_in, check_out, adults1):
         }
     except (KeyError, TypeError, ValueError):
         return None    
-
 
 def get_hotel_details(id, check_in, check_out, adults1):
     # contact api to get individual hotel details
@@ -78,8 +79,6 @@ def get_hotel_details(id, check_in, check_out, adults1):
     except (KeyError, TypeError, ValueError):
         return None    
 
-
-
 def get_hotel_photos(id):
     # contact api to get individual hotel details
     try:
@@ -102,3 +101,11 @@ def get_hotel_photos(id):
         }
     except (KeyError, TypeError, ValueError):
         return None    
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function

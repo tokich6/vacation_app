@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos
+from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required
 
 # Configure application
 app = Flask(__name__)
@@ -132,10 +132,12 @@ def show_hotel_details():
      hotel_price=hotel_price,amenities=amenities, what_is_around=what_is_around, tagline=tagline, freebies=freebies, hotel_rooms=hotel_rooms, images_url_list=images_url_list)
     
 @app.route("/booking", methods=['GET', 'POST'])
+@login_required
 def confirm_booking():
     return render_template('confirm_booking.html')
 
 @app.route("/account", methods=['GET', 'POST'])
+@login_required
 def your_bookings():
     return render_template('your_bookings.html')
 
@@ -184,7 +186,7 @@ def register_user():
         db.session.commit()
         # success
         flash('You have registered successfully!')
-        return redirect("/")
+        return redirect("/login")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -217,10 +219,12 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0].id
+        session['username'] = request.form['username']
 
-        flash('You were successfully logged in')
+        flash('You are successfully logged in!')
         # Redirect user to home page
-        return redirect("/")
+        return redirect('/index')
+        # return redirect(request.referrer)
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:

@@ -31,6 +31,12 @@ main %}
   {% endfor %}
   <!-- flash messages end -->
 
+  <div class="flex items-center justify-center">
+    <h1 class="py-4 text-teal-500 uppercase font-semibold">
+      Create an account
+    </h1>
+  </div>
+
   <div class="lg:max-w-md md:max-w-md sm:max-w-sm xs:max-w-xs pt-6 mx-auto">
     <form
       action="{{ url_for('register_user')}}"
