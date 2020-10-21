@@ -1,5 +1,5 @@
 let navToggle = document.querySelector('.nav');
-let alert = document.querySelector('#error-alert');
+let alert = document.querySelector('#alert');
 let btn = document.querySelector('#btn');
 let slideIndex = 1;
 

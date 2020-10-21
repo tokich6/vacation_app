@@ -147,34 +147,34 @@ def register_user():
         # Ensure username was submitted
         username = request.form.get("username")
         if not username:
-            flash("Please provide a username", 403)
+            flash('Please provide a username', 'error')
             return redirect ('/register')
         # Query database for username
         elif db.session.query(Profile).filter(Profile.username == username).count() != 0:
-            flash("The username already exists, please log in if previously registered or choose a different one", 403)
+            flash('The username already exists, please log in if previously registered or choose a different one', 'error')
             return redirect ('/register')
 
         email = request.form.get("email")
         if not email:
-            flash('please provide an email address', 403)
+            flash('please provide an email address', 'error')
             return redirect('/register')
         elif db.session.query(Profile).filter(Profile.email == email).count() != 0:
-            flash("The email address you entered is already associated with an account, please log in", 403)
+            flash('The email address you entered is already associated with an account, please log in', 'error')
             return redirect ('/login')    
 
         password = request.form.get("password")
         # Ensure password was submitted
         if not password:
-            flash("must provide password", 403)
+            flash('must provide password', 'error')
             return redirect ('/register')
 
         confirm_password = request.form.get("confirm-password")
         # enfure confirmation was submitted and matches the password
         if not confirm_password:
-            flash("must confirm password", 403)
+            flash('must confirm password', 'error')
             return redirect ('/register')
         elif confirm_password != password:
-            flash("confirm password is not a match", 403)
+            flash('confirm password is not a match', 'error')
             return redirect ('/register')
 
         # hash the password
@@ -185,7 +185,7 @@ def register_user():
         db.session.add(data)
         db.session.commit()
         # success
-        flash('You have registered successfully!')
+        flash('You have registered successfully!', 'success')
         return redirect("/login")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -194,37 +194,34 @@ def register_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    # Forget any user_id
+    # Forget any session user_id
     session.clear()
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            flash("must provide username", 403)
-            return redirect ('/login')
+            flash('must provide username', 'error')
+            return render_template ('login.html')
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            flash("must provide password", 403)
-            return redirect ('/login')
+            flash('must provide password', 'error')
+            return render_template ('login.html')
 
+        # query database for the username input
         rows = db.session.query(Profile).filter(Profile.username == request.form.get('username')).all()
-        
-        match = check_password_hash(rows[0].hash, request.form.get("password"))
-        
+
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not match:
-            flash("invalid username and/or password, please try again", 403)
-            return redirect ('/login')
+        if len(rows) != 1 or not check_password_hash(rows[0].hash, request.form.get("password")):
+            flash('invalid username and/or password, please try again', 'error')
+            return render_template ('login.html')
 
         # Remember which user has logged in
         session["user_id"] = rows[0].id
         session['username'] = request.form['username']
 
-        flash('You are successfully logged in!')
-        # Redirect user to home page
+        flash('You are successfully logged in!', 'success')
         return redirect('/')
-        # return redirect(request.referrer)
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:

@@ -14,6 +14,15 @@ html, body {
   }
 }
 
+.alert-error {
+  background-color: red;
+  border-color: darkred;
+}
+
+.alert-success {
+  background-color: #38b2ac;
+  border-color: teal;
+}
 
 .star {
   height: 1.5rem;

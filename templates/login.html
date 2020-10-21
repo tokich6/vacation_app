@@ -1,27 +1,20 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block title %} Sign in {% endblock %} {% block
+main %}
 
-{% block title %}
-    Sign in
-{% endblock %}
-
-{% block main %}
- <section class="h-screen">
-   
-   <!-- flash messages start -->
-  {% for message in get_flashed_messages() %}
+<section class="h-screen">
+  <!-- flash messages start -->
+  {% for category, message in get_flashed_messages(with_categories=True) %}
   <div
-    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-    role="alert"
-    id="error-alert"
+    class="alert-{{category}} border px-4 py-3 rounded relative flex items-center justify-center"
+    id="alert"
   >
-    <strong class="font-bold">Holy smokes!</strong>
-    <span class="block sm:inline"> {{ message }} </span>
+    <span class="block sm:inline text-white"> {{ message }} </span>
     <span
       class="absolute top-0 bottom-0 right-0 px-4 py-3"
       onclick="hideAlert()"
     >
       <svg
-        class="fill-current h-6 w-6 text-red-500"
+        class="fill-current h-6 w-6 text-white"
         role="button"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
@@ -34,46 +27,71 @@
     </span>
   </div>
   {% endfor %}
-   <!-- flash messages end -->
-   <div class="flex items-center justify-center">
-    <h1 class="py-4 text-teal-500 uppercase font-semibold">
-      Sign in
-    </h1>
+  <!-- flash messages end -->
+
+  <div class="flex items-center justify-center">
+    <h1 class="py-4 text-teal-500 uppercase font-semibold">Sign in</h1>
   </div>
 
   <div class="lg:max-w-md md:max-w-md sm:max-w-sm xs:max-w-xs mx-auto py-6">
-    <form action="{{ url_for('login')}}" method="POST" class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form
+      action="{{ url_for('login')}}"
+      method="POST"
+      class="bg-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    >
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="username"
+        >
           Username
         </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="username" type="text" placeholder="Username">
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          name="username"
+          type="text"
+          placeholder="Username"
+        />
       </div>
       <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password"
+        >
           Password
         </label>
-        <input class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" name="password" type="password" placeholder="******************">
+        <input
+          class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          name="password"
+          type="password"
+          placeholder="******************"
+        />
         <p class="text-red-500 text-xs italic">Please enter your password.</p>
       </div>
       <div class="flex items-center">
-        <button class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded" type="submit">
+        <button
+          class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+          type="submit"
+        >
           Sign In
         </button>
       </div>
       <div class="flex justify-end">
-        <a class="inline-block align-baseline font-bold text-sm text-teal-500 hover:text-teal-800 p-3" href="#">
+        <a
+          class="inline-block align-baseline font-bold text-sm text-teal-500 hover:text-teal-800 p-3"
+          href="#"
+        >
           Forgot Password?
         </a>
-        <a class="inline-block align-baseline font-bold text-sm text-teal-500 hover:text-teal-800 p-3" href="/register">
-            Not registered?
+        <a
+          class="inline-block align-baseline font-bold text-sm text-teal-500 hover:text-teal-800 p-3"
+          href="/register"
+        >
+          Not registered?
         </a>
       </div>
     </form>
   </div>
+</section>
 
-
- </section>
-
-  
 {% endblock %}

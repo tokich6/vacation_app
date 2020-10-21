@@ -3,20 +3,19 @@
 
 {% block main %} 
 
-{% for message in get_flashed_messages() %}
+{% for category, message in get_flashed_messages(with_categories=True) %}
 
 <div
-  class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-  role="alert"
-  id="error-alert"
+  class="alert-{{category}} border px-4 py-3 rounded relative flex items-center justify-center"
+  id="alert"
 >
-  <span class="block sm:inline"> {{ message }} </span>
+  <span class="block sm:inline text-white"> {{ message }} </span>
   <span 
   class="absolute top-0 bottom-0 right-0 px-4 py-3"
   onclick="hideAlert()"
   >
     <svg
-      class="fill-current h-6 w-6 text-red-500"
+      class="fill-current h-6 w-6 text-white"
       role="button"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
@@ -43,7 +42,7 @@
 >
   <!-- <section class= "border-b border-teal-500 py-2"> -->
   <div class="destination-search">
-    <label class="inline-block" for="destination">Where To</label>
+    <label class="inline-block" for="destination">Where are you going?</label>
     <input
       class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
       type="text"
