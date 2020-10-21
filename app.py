@@ -212,17 +212,17 @@ def login():
             return render_template ('login.html')
 
         # query database for the username input
-        rows = db.session.query(Profile).filter(Profile.username == request.form.get('username')).all()
+        user = db.session.query(Profile).filter(Profile.username == request.form.get('username')).first()
 
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0].hash, request.form.get("password")):
+        if not user or not check_password_hash(user.hash, request.form.get("password")):
             flash('invalid username and/or password, please try again', 'error')
             return render_template ('login.html')
 
         # Remember which user has logged in
-        session["user_id"] = rows[0].id
+        session["user_id"] = user.id
         session['username'] = request.form['username']
-        
+
         # check if we're redirecting the user to another endpoint, if not default
         if next_url:
             return redirect(next_url)
