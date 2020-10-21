@@ -1,5 +1,5 @@
 from os import environ
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -23,7 +23,7 @@ check_out = ''
 adults_room1 = ''
 rooms = ''
 
-# DATABASE SETUP AND SCHEMAS START
+# DATABASE SETUP START
 ENV = 'dev'
 if ENV == 'dev':
     app.debug = True
@@ -39,7 +39,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # initialize db
 db = SQLAlchemy(app)
 
-# schemas
 class Profile(db.Model):
     __tablename__ = 'profile'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -52,9 +51,11 @@ class Profile(db.Model):
         self.email = email
         self.hash = hash
 
-# DATABASE SETUP AND SCHEMAS END
+# DATABASE SETUP END
 
 
+
+# ROUTES START HERE
 @app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -139,7 +140,7 @@ def confirm_booking():
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def your_bookings():
-    return render_template('your_bookings.html')
+    return render_template('your_bookings.html', name=session['username'])
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
@@ -198,6 +199,8 @@ def login():
     session.clear()
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        # get the value of the hidden next url input
+        next_url = request.form.get("next")
         # Ensure username was submitted
         if not request.form.get("username"):
             flash('must provide username', 'error')
@@ -219,9 +222,12 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0].id
         session['username'] = request.form['username']
-
+        
+        # check if we're redirecting the user to another endpoint, if not default
+        if next_url:
+            return redirect(next_url)
         flash('You are successfully logged in!', 'success')
-        return redirect('/')
+        return redirect(url_for("index"))
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
