@@ -23,6 +23,7 @@ def search_location_id(location):
     # Parse response
     try:
         result = response.json()
+        print(result)
         destinationID = result['suggestions'][0]['entities'][0]['destinationId']
         return destinationID
     except (KeyError, TypeError, ValueError):

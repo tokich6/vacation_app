@@ -1,5 +1,6 @@
 from os import environ
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from datetime import date 
+from flask import Flask, render_template, request, redirect, session, flash, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -22,6 +23,8 @@ check_in = ''
 check_out = ''
 adults_room1 = ''
 rooms = ''
+today = date.today()
+print(f'todays date is {today}')
 
 # DATABASE SETUP START
 ENV = 'dev'
@@ -84,11 +87,17 @@ def list_hotels():
         destination_id = search_location_id(destination)
         
         if not destination:
-            flash('Please type in a location')
+            flash('Please type in a destination', 'error')
+            return redirect("/")
+        elif not check_in or not check_out:
+            flash('Please provide a valid check-in and check-out date', 'error')
             return redirect("/")
         else:
             # list_properties defined in helpers.py
             output = list_properties(destination_id, check_in, check_out, adults_room1)
+            print(output)
+            if output == None:
+                return render_template('400.html')
             header = output['header']
             totalCount = output['totalCount']
             # an array of hotels' list
@@ -238,6 +247,25 @@ def logout():
     # Forget any user_id
     session.clear()
     return redirect("/")
+
+# custom templates for error handling - to be added
+
+@app.errorhandler(404)
+def not_found():
+    """Page not found."""
+    return make_response(render_template("404.html"), 404)
+
+
+@app.errorhandler(400)
+def bad_request():
+    """Bad request."""
+    return make_response(render_template("400.html"), 400)
+
+
+@app.errorhandler(500)
+def server_error():
+    """Internal server error."""
+    return make_response(render_template("500.html"), 500)
 
 
 if __name__ == '__main__':
