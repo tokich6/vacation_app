@@ -13,6 +13,7 @@ gunicorn = "*"
 requests = "*"
 python-dotenv = "*"
 psycopg2 = "*"
+amadeus = "*"
 
 [requires]
 python_version = "3.8"
