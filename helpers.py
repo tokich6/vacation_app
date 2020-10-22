@@ -5,7 +5,7 @@ from flask import redirect, render_template, request, session, url_for
 from functools import wraps
 from amadeus import Client, ResponseError
 
-# initialize Amadeus client
+# initialize Amadeus client - export AMADEUS_CLIENT_ID && AMADEUS_CLIENT_SECRET environment variables
 amadeus = Client()
 
 
