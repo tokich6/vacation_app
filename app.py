@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from tempfile import mkdtemp
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
-from helpers import list_hotels_by_city, login_required
+from helpers import list_hotels_by_city, get_locations, login_required
 # from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required
 
 # Configure application
@@ -68,11 +68,12 @@ def index():
 @app.route("/hotels", methods=['GET', 'POST'])
 def list_hotels():
     if request.method == 'GET':
-        # return render_template('hotels.html')
-        return list_hotels_by_city()
+        return redirect("/")
+        
     else:
         # extract parameters from the search form
-        destination = request.form.get('destination')
+        city = request.form.get('destination')
+        print(city)
         global check_in
         check_in = request.form.get('check-in')
         print(check_in)
@@ -86,27 +87,25 @@ def list_hotels():
         adults_room1 = request.form.get('adult1')
         print(adults_room1)
 
-        # search_location_id defined in helpers.py
-        destination_id = search_location_id(destination)
-        
-        if not destination:
+        if not city:
             flash('Please type in a destination', 'error')
             return redirect("/")
         elif not check_in or not check_out:
             flash('Please provide a valid check-in and check-out date', 'error')
             return redirect("/")
         else:
-            # list_properties defined in helpers.py
-            output = list_properties(destination_id, check_in, check_out, adults_room1)
-            print(output)
+            # list_hotels_by_city defined in helpers.py
+            output = list_hotels_by_city('PAR', check_in, check_out, adults_room1, rooms)
             if output == None:
-                return render_template('400.html')
-            header = output['header']
-            totalCount = output['totalCount']
+                return render_template('400.html')   
+            # header = output['header']
+            # totalCount = output['totalCount']
             # an array of hotels' list
             hotels = output['hotels']
-            # print(hotels[0])
-            return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
+            if not hotels:
+                return render_template('404.html')
+            print(hotels)
+            return render_template('hotels.html', hotels=hotels)
 
 @app.route("/hotels/details", methods=['GET', 'POST'])
 def show_hotel_details():

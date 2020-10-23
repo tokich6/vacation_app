@@ -1,30 +1,59 @@
 # from os import environ
-import os
+from os import environ
 import requests
 from flask import redirect, render_template, request, session, url_for
 from functools import wraps
-from amadeus import Client, ResponseError
+from amadeus import Client, ResponseError, Location
 
-# initialize Amadeus client - export AMADEUS_CLIENT_ID && AMADEUS_CLIENT_SECRET environment variables
+
+# initialize Amadeus client - export AMADEUS_CLIENT_ID && AMADEUS_CLIENT_SECRET environment variables required
 amadeus = Client()
 
-
-def list_hotels_by_city():
+# city_code, check_in, check_out, adults1
+def list_hotels_by_city(city_code, check_in, check_out, adults1, rooms):
     try:
         # Get list of Hotels by city code
-        response = amadeus.shopping.hotel_offers.get(cityCode='PAR')
+        response = amadeus.shopping.hotel_offers.get(cityCode=city_code,checkInDate=check_in,checkOutDate=check_out,adults=adults1,
+         roomQuantity=rooms,currency='USD')
     except ResponseError as error:
         raise error
-
     # Parse response
     try:
         result = response.data
-        # returns a list of 4 hotels
         print(result)
-        return 'ok'
+        return {
+            'hotels': result
+        }
     except (KeyError, TypeError, ValueError):
         return None    
 
+# Airport and City Search (autocomplete)
+# Find all the cities and airports starting by 'LON' 
+def get_locations():
+    try:
+        response = amadeus.reference_data.locations.get(keyword='LON', subType=Location.ANY)
+    except ResponseError as error:
+        raise error
+    # Parse response
+    try:
+        result = response.data
+        print(result)
+        return result
+    except (KeyError, TypeError, ValueError):
+        return None        
+
+# Travel Recommendations
+amadeus.reference_data.recommended_locations.get(cityCodes='PAR', travelerCountryCode='FR')
+
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect(url_for("login", next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # find the id of the typed in location/destination
@@ -124,10 +153,4 @@ def list_hotels_by_city():
     # except (KeyError, TypeError, ValueError):
     #     return None    
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect(url_for("login", next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
+
