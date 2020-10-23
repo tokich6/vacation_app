@@ -2,9 +2,11 @@
 {%endblock %} {% block main %}
 
 <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- flash messages start -->
+  {% include 'messages.html' %}
+  <!-- flash messages end -->
 
-    <h1>Welcome to your hotel bookings' dashboard, {{ name }}</h1>
-
+  <h1>Welcome to your hotel bookings' dashboard, {{ name }}</h1>
 </section>
 
-{% endblock %}    
+{% endblock %}

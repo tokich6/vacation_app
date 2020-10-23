@@ -18,12 +18,10 @@ def search_location_id(location):
         }
         response = requests.request("GET", url, headers=headers, params=querystring)
     except requests.RequestException:
-        return None    
-    
+        return None      
     # Parse response
     try:
         result = response.json()
-        print(result)
         destinationID = result['suggestions'][0]['entities'][0]['destinationId']
         return destinationID
     except (KeyError, TypeError, ValueError):
@@ -42,7 +40,6 @@ def list_properties(id, check_in, check_out, adults1):
         response = requests.request("GET", url, headers=headers, params=querystring)
     except requests.RequestException:
         return None     
-
      # Parse response
     try:
         result = response.json()
@@ -66,7 +63,6 @@ def get_hotel_details(id, check_in, check_out, adults1):
         response = requests.request("GET", url, headers=headers, params=querystring)
     except requests.RequestException:
         return None     
-
      # Parse response
     try:
         result = response.json()
