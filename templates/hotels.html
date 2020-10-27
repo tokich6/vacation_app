@@ -98,7 +98,7 @@
         <p class="text-red-500 mb-4">Only {{ hotel.roomsLeft}} room left!</p>
         {% endif %} {% endif %}
         <p class="mb-4">
-          <span class="font-bold"> {{ hotel.ratePlan.price.current}} </span> <span class="text-sm"> average price/night </span> 
+          <span class="font-bold"> from {{ hotel.ratePlan.price.current}} </span> <span class="text-sm"> average price/night </span> 
         </p>
         <p class="mb-4"> {{ hotel.ratePlan.price.totalPricePerStay|safe}} </p>
   
@@ -118,11 +118,5 @@
   </ul>
 </section>
 
-<div id="listings-loading" class="block flex items-center">
-  <span class="listings-loading-circle loading-circle1"></span>
-  <span class="listings-loading-circle loading-circle2"></span>
-  <span class="listings-loading-circle loading-circle3"></span>
-  <span class="listings-loading-circle loading-circle4"></span>
-  </div>
 
 {% endblock %}

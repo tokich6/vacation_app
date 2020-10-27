@@ -69,9 +69,8 @@ def get_hotel_details(id, check_in, check_out, adults1):
         return {
             'amenities': result['data']['body']['overview']['overviewSections'][0]['content'],
             'what_is_around': result['data']['body']['overview']['overviewSections'][1]['content'],
-            'property_description': result['data']['body']['propertyDescription']
-            # 'totalCount':  result['data']['body']['searchResults']['totalCount'],
-            # 'hotels': result['data']['body']['searchResults']['results']
+            'property_description': result['data']['body']['propertyDescription'],
+            'rooms': result['data']['body']['roomsAndRates']['rooms']
         }
     except (KeyError, TypeError, ValueError):
         return None    

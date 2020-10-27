@@ -6,7 +6,28 @@
   {% include 'messages.html' %}
   <!-- flash messages end -->
 
-  <h1>confirm booking route</h1>
+  <h1>Please check the details below and confirm the booking</h1>
+
+  <p>
+    {{ hotel_name }} <span> {{hotel_stars}} </span>
+    <span>Hotel ID is: {{hotel_id}} </span>
+  </p>
+
+  <p>Located at: {{ hotel_address}}</p>
+  <p>Stay from {{check_in}} to {{check_out}}</p>
+  <p>Number of adults: {{adults_room1}} in {{hotel_rooms}} room/s</p>
+  <p>Total price: {{hotel_price}}</p>
+
+  <label for="rooms" class="dropdown inline-flex">Choose your room type</label>
+  <select
+    class="dropdown-content bg-transparent bg-transparent py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+    name="room_type"
+    id="room"
+  >
+    {% for room in room_types %}
+    <option value="{{ room }}">{{ room }}</option>
+    {% endfor %}
+  </select>
 </section>
 
 {% endblock %}

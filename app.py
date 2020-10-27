@@ -54,8 +54,6 @@ class Profile(db.Model):
 
 # DATABASE SETUP END
 
-
-
 # ROUTES START HERE
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -68,6 +66,7 @@ def list_hotels():
     else:
         # extract parameters from the search form
         destination = request.form.get('destination')
+        print(destination)
         global check_in
         check_in = request.form.get('check-in')
         print(check_in)
@@ -83,6 +82,7 @@ def list_hotels():
 
         # search_location_id defined in helpers.py
         destination_id = search_location_id(destination)
+        print(f'destination id is { destination_id  }')
         
 
         if not destination:
@@ -106,6 +106,7 @@ def list_hotels():
 
 @app.route("/hotels/details", methods=['GET', 'POST'])
 def show_hotel_details():
+    # add POST method
     # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
     print(f'Hotel_id is: {hotel_id}')
@@ -143,7 +144,24 @@ def show_hotel_details():
 @app.route("/booking", methods=['GET', 'POST'])
 @login_required
 def confirm_booking():
-    return render_template('confirm_booking.html')
+    if request.method == 'POST':
+        
+        hotel_id = request.form.get('hotel_id')
+
+        # contact API to check details as well as room rates before final booking confirmation
+        output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
+
+        hotel_name = output_hotel_details['property_description']['name']
+        hotel_stars = output_hotel_details['property_description']['starRating']
+        hotel_address = output_hotel_details['property_description']['address']['fullAddress']
+        room_types = output_hotel_details['rooms'] # returns an array
+        hotel_price = request.form.get('hotel_price')
+
+      
+        return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
+        hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room_types=room_types)
+    # else request is GET
+    return redirect('/')
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
