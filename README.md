@@ -2,4 +2,4 @@
 
 web-based Python app - Flask & PostgreSQL 
 
-Data pulled from hotels.com API
+testing Amadeus API
