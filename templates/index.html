@@ -25,7 +25,7 @@
       class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
       type="text"
       name="destination"
-      placeholder="New York"
+      placeholder="your destination, e.g. New York"
     />
   </div>
   <div class="check-in-field">
@@ -34,6 +34,8 @@
       class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
       type="date"
       name="check-in"
+      min="{{tomorrow}}"
+      value="{{tomorrow}}"
     />
   </div>
   <div class="check-out-field">
@@ -42,6 +44,8 @@
       class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
       type="date"
       name="check-out"
+      min="{{day_after}}"
+      value="{{day_after}}"
     />
   </div>
   <div class="rooms-field mr-5">

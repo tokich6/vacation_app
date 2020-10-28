@@ -2,6 +2,7 @@ from os import environ
 import requests
 from flask import redirect, render_template, request, session, url_for
 from functools import wraps
+from datetime import date
 
 
 API_KEY = environ.get('API_KEY')
@@ -105,3 +106,10 @@ def login_required(f):
             return redirect(url_for("login", next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
+def str_to_dates(string):
+  [year, month, day] = map(int, string.split('-'))
+  return date(year, month, day)
+
+def get_days(start, end):
+  return (str_to_dates(end) - str_to_dates(start)).days

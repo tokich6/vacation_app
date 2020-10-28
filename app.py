@@ -1,5 +1,5 @@
 from os import environ
-from datetime import date 
+from datetime import date, timedelta
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required
+from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days
 
 # Configure application
 app = Flask(__name__)
@@ -57,7 +57,9 @@ class Profile(db.Model):
 # ROUTES START HERE
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    tomorrow = date.today() + timedelta(days=1)
+    day_after = date.today() + timedelta(days=2)
+    return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
 
 @app.route("/hotels", methods=['GET', 'POST'])
 def list_hotels():
@@ -147,6 +149,7 @@ def confirm_booking():
     if request.method == 'POST':
         
         hotel_id = request.form.get('hotel_id')
+        hotel_price = request.form.get('hotel_price')
 
         # contact API to check details as well as room rates before final booking confirmation
         output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
@@ -154,12 +157,14 @@ def confirm_booking():
         hotel_name = output_hotel_details['property_description']['name']
         hotel_stars = output_hotel_details['property_description']['starRating']
         hotel_address = output_hotel_details['property_description']['address']['fullAddress']
-        room_types = output_hotel_details['rooms'] # returns an array
-        hotel_price = request.form.get('hotel_price')
-
-      
+        best_room = output_hotel_details['rooms'][0] # returns an array
+          # get_days defined in helpers.py
+        stay_duration = get_days(check_in, check_out)
+    
         return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
-        hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room_types=room_types)
+        hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
+        stay_duration=stay_duration)
+
     # else request is GET
     return redirect('/')
 

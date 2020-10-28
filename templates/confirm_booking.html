@@ -5,29 +5,121 @@
   <!-- flash messages start -->
   {% include 'messages.html' %}
   <!-- flash messages end -->
+  <section class="text-center leading-relaxed">
+    <h1
+      class="mt-2 text-2xl leading-8 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
+    >
+      {{ hotel_name }}
+    </h1>
+    <span
+      class="inline-flex text-3xl leading-8 tracking-tight text-gray-900 sm:text-4xl sm:leading-10"
+    >
+      {% for star in range(5) %}
+      <svg
+        class="star mx-0.8 w-4 h-4 fill-current text-gray-400 {% if star <= hotel_stars -1 %}text-yellow-500{% endif %}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+        />
+      </svg>
+      {% endfor %}
+    </span>
+    <address class="mt-4 leading-3 text-gray-500 mx-auto mb-4">
+      {{ hotel_address}}
+    </address>
 
-  <h1>Please check the details below and confirm the booking</h1>
+    <h1 class="text-xl leading-8 text-gray-900">
+      Please review the details below before confirming the booking
+    </h1>
+    <p>
+      You're arriving on <span class="font-bold"> {{check_in}} </span> and
+      leaving on <span class="font-bold"> {{check_out}} </span>, stay is for
+      <span class="font-bold"> {{ stay_duration }}</span> night/s
+    </p>
 
-  <p>
-    {{ hotel_name }} <span> {{hotel_stars}} </span>
-    <span>Hotel ID is: {{hotel_id}} </span>
-  </p>
+    <p>
+      The booking is for
+      <span class="font-bold"> {{adults_room1}} </span> adult/s staying in
+      <span class="font-bold"> {{hotel_rooms}} </span> room/s
+    </p>
+  </section>
 
-  <p>Located at: {{ hotel_address}}</p>
-  <p>Stay from {{check_in}} to {{check_out}}</p>
-  <p>Number of adults: {{adults_room1}} in {{hotel_rooms}} room/s</p>
-  <p>Total price: {{hotel_price}}</p>
+  {% if room %}
+  <form action="{{ url_for('your_bookings') }}" method="POST">
+    <input type="hidden" name="hotel_id" value="{{hotel_id}}" />
+    <div class="text-center mt-6 mb-4">
+      <label for="room" class="text-teal-500">
+        We've picked the best available room for you!
+      </label>
+      <option value="{{ room.name }}" name="{{room.name}}" class="font-bold text-xl">
+        {{room.name}}
+      </option>
+    </div>
 
-  <label for="rooms" class="dropdown inline-flex">Choose your room type</label>
-  <select
-    class="dropdown-content bg-transparent bg-transparent py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
-    name="room_type"
-    id="room"
-  >
-    {% for room in room_types %}
-    <option value="{{ room }}">{{ room }}</option>
-    {% endfor %}
-  </select>
+    {% if room.images %}
+    <div>
+      <img
+        src="{{room.images[0].fullSizeUrl}}"
+        alt="image of available room"
+        class="sm:mx-auto sm:w-3/5"
+      />
+    </div>
+    {% endif %}
+
+    <section class="md:flex md:justify-center">
+      <div class="p-4">
+        <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
+          Room description
+        </h4>
+        <p>{{ room.additionalInfo.description|safe }}</p>
+      </div>
+
+      <div class="p-4">
+        <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
+          Booking conditions
+        </h4>
+
+        {% if room.ratePlans[0].price.nightlyPriceBreakdown %}
+        <option
+          value="{{ room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value }}"
+        >
+          {{
+          room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value
+          }}
+          <span>
+            {{
+            room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].heading
+            }}</span
+          >
+        </option>
+        {% else %}
+
+        <p>The average price per night is {{hotel_price}}</p>
+        <p>Total to pay for your stay: {{ hotel_price * stay_duration }}</p>
+
+        {% endif %}
+
+        <p>{{ room.ratePlans[0].cancellations[0].info|safe }}</p>
+      </div>
+    </section>
+    <button
+      class="inline-flex justify-end bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 mt-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+      type="submit"
+    >
+      Confirm booking
+    </button>
+  </form>
+
+  {% else %}
+
+  <h3>
+    Sorry, someone just booked the last rooms available. You can choose a
+    different hotel or try again later in case of any cancellations.
+  </h3>
+
+  {% endif %}
 </section>
 
 {% endblock %}

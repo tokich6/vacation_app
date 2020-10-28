@@ -31,7 +31,7 @@
       </li>
       {% endfor %}
     </ul>
-    <address class="mt-4 leading-3 text-gray-500 mx-auto">
+    <address class="mt-4 leading-3 text-gray-500 mx-auto mb-4">
       {{ hotel_address }}
     </address>
     {% endif %} {% if freebies %} {% for freeby in freebies %}
@@ -43,7 +43,7 @@
   </div>
 
   <!-- IMAGE CAROUSEL -->
-  {% if images_url_list|length > 1 %}
+  {% if images_url_list and images_url_list|length > 1 %}
 
   <div class="carousel-container relative">
     {% for image in images_url_list %}
