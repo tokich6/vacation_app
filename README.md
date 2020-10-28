@@ -1,2 +1,2 @@
 
-testing Amadeus API
+# test Amadeus API
