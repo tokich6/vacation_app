@@ -20,13 +20,18 @@
 >
   <!-- <section class= "border-b border-teal-500 py-2"> -->
   <div class="destination-search">
-    <label class="inline-block" for="destination">Where are you going?</label>
-    <input
-      class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
-      type="text"
-      name="destination"
-      placeholder="your destination, e.g. New York"
-    />
+    <label class="inline-block" for="destination">Most popular destinations</label>
+    <select
+    class="bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer inputs-custom"
+    name="destination"
+    id="destination"
+  > 
+    <option value="New York">New York</option>
+    <option value="Paris"> Paris </option>
+    <option value="London">London</option>
+    <option value="Miami">Miami</option>
+    <option value="Los Angeles">Los Angeles</option>
+  </select>
   </div>
   <div class="check-in-field">
     <label class="inline-block" for="check-in">Check-in</label>
@@ -97,9 +102,9 @@
 
 <article class="md:grid-cols-3 md:grid md:grig-cols-2 md:gap-x-8 md:gap-y-10 mb-4">
   <div class="relative mx-auto w-4/5">
-    <h1 class="py-4 text-teal-500 uppercase font-semibold">
+    <h3 class="py-4 text-teal-500 uppercase font-semibold">
       Need inspiration for your next trip?
-    </h1>
+    </h3>
     <div class="index-image-container">
       <img
         src="../static/imgs/coco-trees.jpg"

@@ -57,6 +57,7 @@ class Profile(db.Model):
 # ROUTES START HERE
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    # Set min date input for check_in & check_out
     tomorrow = date.today() + timedelta(days=1)
     day_after = date.today() + timedelta(days=2)
     return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
@@ -96,7 +97,6 @@ def list_hotels():
         else:
             # list_properties defined in helpers.py
             output = list_properties(destination_id, check_in, check_out, adults_room1)
-            print(output)
             if output == None:
                 return render_template('400.html')
             header = output['header']
@@ -119,6 +119,8 @@ def show_hotel_details():
     # get_hotel_details function defined in helpers
     output_hotel_details = get_hotel_details(hotel_id,check_in, check_out, adults_room1)
     # save necessary output results as variables to access in template
+    if output_hotel_details == None:
+        return render_template('500.html')
     amenities = output_hotel_details['amenities']
     what_is_around = output_hotel_details['what_is_around']
     hotel_name = output_hotel_details['property_description']['name']
@@ -153,12 +155,13 @@ def confirm_booking():
 
         # contact API to check details as well as room rates before final booking confirmation
         output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
-
+        if output_hotel_details == None:
+            return render_template('500.html')
         hotel_name = output_hotel_details['property_description']['name']
         hotel_stars = output_hotel_details['property_description']['starRating']
         hotel_address = output_hotel_details['property_description']['address']['fullAddress']
-        best_room = output_hotel_details['rooms'][0] # returns an array
-          # get_days defined in helpers.py
+        best_room = output_hotel_details['first_room'] 
+        # get_days defined in helpers.py
         stay_duration = get_days(check_in, check_out)
     
         return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
@@ -171,7 +174,25 @@ def confirm_booking():
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def your_bookings():
-    return render_template('your_bookings.html', name=session['username'])
+    hotel_id = request.form.get('hotel_id')
+    print(hotel_id)
+    hotel_name = request.form.get('hotel_name')
+    print(hotel_name)
+    room_name = request.form.get('room_name')
+    print(room_name)
+    total_pay = request.form.get('total_pay')
+    print(total_pay)
+    free_cancellation = request.form.get('free_cancellation')
+    print(free_cancellation)
+
+    # enter data into database 
+    # data = Booking(hotel_id, hotel_name, check_in, check_out, rooms, adults_room1, 
+    # room_name, total_pay, cancel_before)
+    # db.session.add(data)
+    # db.session.commit()
+
+    return render_template('your_bookings.html', name=session['username'], hotel_id=hotel_id, hotel_name=hotel_name,
+    room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():

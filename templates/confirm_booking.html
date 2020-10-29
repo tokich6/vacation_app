@@ -30,80 +30,93 @@
       {{ hotel_address}}
     </address>
 
-    <h1 class="text-xl leading-8 text-gray-900">
+    <h1 class="text-xl leading-8 text-gray-900 font-bold mb-4">
       Please review the details below before confirming the booking
     </h1>
     <p>
       You're arriving on <span class="font-bold"> {{check_in}} </span> and
       leaving on <span class="font-bold"> {{check_out}} </span>, stay is for
-      <span class="font-bold"> {{ stay_duration }}</span> night/s
+      <span class="font-bold"> {{ stay_duration }}</span> {% if stay_duration == 1 %} night {%else%} nights {% endif %}
     </p>
 
     <p>
       The booking is for
-      <span class="font-bold"> {{adults_room1}} </span> adult/s staying in
-      <span class="font-bold"> {{hotel_rooms}} </span> room/s
+      <span class="font-bold"> {{adults_room1}} </span> {% if adults_room1 == 1 %} adult {%else%} adults {% endif %} staying in
+      <span class="font-bold"> {{hotel_rooms}} </span> {% if hotel_rooms == 1 %} room {%else%} rooms {% endif %}
     </p>
   </section>
 
   {% if room %}
+  <div class="text-center mt-6 mb-4">
+    <p for="room" class="text-teal-500">
+      We've picked the best available room for you!
+    </p>
+    <p class="font-bold text-xl">{{room.name}}</p>
+  </div>
+
+  {% if room.images %}
+  <div>
+    <img
+      src="{{room.images[0].fullSizeUrl}}"
+      alt="image of available room"
+      class="sm:mx-auto sm:w-3/5"
+    />
+  </div>
+  {% endif %}
+
+  <section class="md:flex md:justify-center">
+    <div class="p-4">
+      <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
+        Room description
+      </h4>
+      <p>{{ room.additionalInfo.description|safe }}</p>
+    </div>
+
+    <div class="p-4">
+      <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
+        Booking conditions
+      </h4>
+
+      {% if room.ratePlans[0].price.nightlyPriceBreakdown %} {% set total_pay =
+        room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value %}
+      <p> Total to pay for your stay: <span class="font-bold"> {{ total_pay }} </span> 
+        <span>
+          {{
+          room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].heading
+          }}</span
+        >
+      </p>
+      {% else %} {% set total_pay = hotel_price * stay_duration %}
+
+      <p>The average price per night is {{hotel_price}}</p>
+      <p>Total to pay for your stay:  <span class="font-bold"> {{ total_pay }}</span>
+        <span> for {{ stay_duration }} nights </span>
+       </p>
+
+      {% endif %}
+
+      <p>{{ room.ratePlans[0].cancellation.info|safe }}</p>
+    </div>
+  </section>
+
+  <p> {{ hotel_id}}</p>
+  <p> {{ hotel_name}}</p>
+  <p> {{ room.name}}</p>
+  <p> {{ total_pay}}</p>
+  {% set free_cancellation = room.ratePlans[0].cancellation.free %}
+  <p> Free cancellation: {{ free_cancellation }}</p>
+  {% if free_cancellation == True %}
+  {% set cancel_before = room.ratePlans[0].cancellation.cancellationDate %}
+  <p> Cancel before:  {{ cancel_before }}</p>
+  {% endif %}
+  
+
   <form action="{{ url_for('your_bookings') }}" method="POST">
     <input type="hidden" name="hotel_id" value="{{hotel_id}}" />
-    <div class="text-center mt-6 mb-4">
-      <label for="room" class="text-teal-500">
-        We've picked the best available room for you!
-      </label>
-      <option value="{{ room.name }}" name="{{room.name}}" class="font-bold text-xl">
-        {{room.name}}
-      </option>
-    </div>
-
-    {% if room.images %}
-    <div>
-      <img
-        src="{{room.images[0].fullSizeUrl}}"
-        alt="image of available room"
-        class="sm:mx-auto sm:w-3/5"
-      />
-    </div>
-    {% endif %}
-
-    <section class="md:flex md:justify-center">
-      <div class="p-4">
-        <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
-          Room description
-        </h4>
-        <p>{{ room.additionalInfo.description|safe }}</p>
-      </div>
-
-      <div class="p-4">
-        <h4 class="text-lg leading-6 font-medium text-gray-900 underline">
-          Booking conditions
-        </h4>
-
-        {% if room.ratePlans[0].price.nightlyPriceBreakdown %}
-        <option
-          value="{{ room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value }}"
-        >
-          {{
-          room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value
-          }}
-          <span>
-            {{
-            room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].heading
-            }}</span
-          >
-        </option>
-        {% else %}
-
-        <p>The average price per night is {{hotel_price}}</p>
-        <p>Total to pay for your stay: {{ hotel_price * stay_duration }}</p>
-
-        {% endif %}
-
-        <p>{{ room.ratePlans[0].cancellations[0].info|safe }}</p>
-      </div>
-    </section>
+    <input type="hidden" name="hotel_name" value="{{hotel_name}}" />
+    <input type="hidden" name="room_name" value="{{room.name}}" />
+    <input type="hidden" name="total_pay" value="{{total_pay}}" />
+    <input type="hidden" name="free_cancellation" value="{{free_cancellation}}" />
     <button
       class="inline-flex justify-end bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 mt-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
       type="submit"

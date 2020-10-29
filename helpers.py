@@ -71,7 +71,7 @@ def get_hotel_details(id, check_in, check_out, adults1):
             'amenities': result['data']['body']['overview']['overviewSections'][0]['content'],
             'what_is_around': result['data']['body']['overview']['overviewSections'][1]['content'],
             'property_description': result['data']['body']['propertyDescription'],
-            'rooms': result['data']['body']['roomsAndRates']['rooms']
+            'first_room': result['data']['body']['roomsAndRates']['rooms'][0]
         }
     except (KeyError, TypeError, ValueError):
         return None    
@@ -107,9 +107,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def str_to_dates(string):
+def str_to_date(string):
   [year, month, day] = map(int, string.split('-'))
   return date(year, month, day)
 
 def get_days(start, end):
-  return (str_to_dates(end) - str_to_dates(start)).days
+  return (str_to_date(end) - str_to_date(start)).days
