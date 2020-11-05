@@ -41,8 +41,8 @@
 
     <p>
       The booking is for
-      <span class="font-bold"> {{adults_room1}} </span> {% if adults_room1 == 1 %} adult {%else%} adults {% endif %} staying in
-      <span class="font-bold"> {{hotel_rooms}} </span> {% if hotel_rooms == 1 %} room {%else%} rooms {% endif %}
+      <span class="font-bold"> {{adults_room1}} </span> {%if adults_room1 == 1%} adult {%else%} adults {% endif %} staying in
+      <span class="font-bold"> {{hotel_rooms}} </span> {%if hotel_rooms == 1%} room {%else%} rooms {% endif %}
     </p>
   </section>
 
@@ -105,8 +105,11 @@
   <p> {{ total_pay}}</p>
   {% set free_cancellation = room.ratePlans[0].cancellation.free %}
   <p> Free cancellation: {{ free_cancellation }}</p>
-  {% if free_cancellation == True %}
+  {% if free_cancellation %}
   {% set cancel_before = room.ratePlans[0].cancellation.cancellationDate %}
+  <p> Cancel before:  {{ cancel_before }}</p>
+  {% else %}
+  {% set cancel_before = today %}
   <p> Cancel before:  {{ cancel_before }}</p>
   {% endif %}
   
@@ -117,6 +120,7 @@
     <input type="hidden" name="room_name" value="{{room.name}}" />
     <input type="hidden" name="total_pay" value="{{total_pay}}" />
     <input type="hidden" name="free_cancellation" value="{{free_cancellation}}" />
+    <input type="hidden" name="cancel_before" value="{{cancel_before}}" />
     <button
       class="inline-flex justify-end bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 mt-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
       type="submit"
