@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days
+from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool
 
 # Configure application
 app = Flask(__name__)
@@ -49,7 +49,7 @@ class Profile(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     hash = db.Column(db.Text, nullable=False)
-    # bookings = db.relationship('Booking', backref='profile', lazy=True)
+    bookings = db.relationship('Booking', backref='profile', lazy=True)
 
     def __init__(self, username, email, hash):
         self.username = username
@@ -62,24 +62,26 @@ class Booking(db.Model):
     booking_id = db.Column(db.Integer, primary_key=True, nullable=False)
     # foreign key
     user_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
-    profile = db.relationship('Profile', backref=db.backref('profile', uselist=False))
     hotel_id = db.Column(db.Integer)
     hotel_name = db.Column(db.Text())
-    check_in = db.Column(db.String(100))
-    check_out = db.Column(db.String(100))
-    adults_room1 = db.Column(db.String(100))
-    rooms = db.Column(db.String(100))
+    city_name = db.Column(db.String(100))
+    country_code = db.Column(db.String(20))
+    check_in = db.Column(db.Date)
+    check_out = db.Column(db.Date)
+    adults_room1 = db.Column(db.Integer)
+    rooms = db.Column(db.Integer)
     room_name = db.Column(db.Text())
-    total_pay = db.Column(db.Text())
-    free_cancellation = db.Column(db.String(100))
-    cancel_before = db.Column(db.String(100))
+    total_pay = db.Column(db.Numeric)
+    free_cancellation = db.Column(db.Boolean)
+    cancel_before = db.Column(db.Date)
     booked_on = db.Column(db.Date)
 
-    # , default=db.func.now()
 
-    def __init__(self, hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on):
+    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on):
         self.hotel_id = hotel_id
         self.hotel_name = hotel_name
+        self.city_name = city_name
+        self.country_code = country_code
         self.check_in = check_in
         self.check_out = check_out
         self.adults_room1 = adults_room1
@@ -173,7 +175,7 @@ def show_hotel_details():
     hotel_address = output_hotel_details['property_description']['address']['fullAddress']
     tagline = output_hotel_details['property_description']['tagline']
     freebies = output_hotel_details['property_description']['freebies']
-    hotel_price = output_hotel_details['property_description']['featuredPrice']['currentPrice']['plain']
+    hotel_price = int(output_hotel_details['property_description']['featuredPrice']['currentPrice']['plain'])
     hotel_rooms = output_hotel_details['property_description']['roomTypeNames']
 
     # get_hotel_photos defined in helpers
@@ -206,13 +208,15 @@ def confirm_booking():
         hotel_name = output_hotel_details['property_description']['name']
         hotel_stars = output_hotel_details['property_description']['starRating']
         hotel_address = output_hotel_details['property_description']['address']['fullAddress']
+        city_name = output_hotel_details['property_description']['address']['cityName']
+        country_code = output_hotel_details['property_description']['address']['countryCode']
         best_room = output_hotel_details['first_room']
         # get_days defined in helpers.py
         stay_duration = get_days(check_in, check_out)
 
         return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
                                hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
-                               stay_duration=stay_duration)
+                               stay_duration=stay_duration, city_name=city_name, country_code=country_code)
 
     # else request is GET
     return redirect('/')
@@ -231,18 +235,24 @@ def your_bookings():
         print(hotel_id)
         hotel_name = request.form.get('hotel_name')
         print(hotel_name)
+        city_name = request.form.get('city_name')
+        country_code = request.form.get('country_code')
         room_name = request.form.get('room_name')
         print(room_name)
         total_pay = request.form.get('total_pay')
         print(total_pay)
-        free_cancellation = request.form.get('free_cancellation')
-        print(free_cancellation)
+        free_cancellation = str_to_bool(request.form.get('free_cancellation'))
+        print(type(free_cancellation))
         if free_cancellation == True:
             cancel_before = request.form.get('cancel_before')
+            cancel_before = cancel_before[:-6]
             print(cancel_before)
 
-        # enter booking into the database
-        data = Booking(hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on)
+        # enter booking details into the database
+        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on)
+        # get current user id and assign it to user_id booking entry
+        current_user = db.session.query(Profile).filter(Profile.id == session['user_id']).first()
+        data.user_id = current_user.id
         db.session.add(data)
         db.session.commit()
         flash('Your booking is confirmed', 'success')
@@ -333,7 +343,7 @@ def login():
             return render_template('login.html')
 
         # Remember which user has logged in
-        session["user_id"] = user.id
+        session['user_id'] = user.id
         session['username'] = request.form['username']
 
         # check if we're redirecting the user to another endpoint, if not default

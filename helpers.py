@@ -113,3 +113,7 @@ def str_to_date(string):
 
 def get_days(start, end):
   return (str_to_date(end) - str_to_date(start)).days
+
+def str_to_bool(string):
+    d = {'True': True, 'False': False}
+    return d.get(string, string)
