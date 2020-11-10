@@ -49,6 +49,7 @@ class Profile(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     hash = db.Column(db.Text, nullable=False)
+    # bookings = db.relationship('Booking', backref='profile', lazy=True)
 
     def __init__(self, username, email, hash):
         self.username = username
@@ -61,21 +62,22 @@ class Booking(db.Model):
     booking_id = db.Column(db.Integer, primary_key=True, nullable=False)
     # foreign key
     user_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
+    profile = db.relationship('Profile', backref=db.backref('profile', uselist=False))
     hotel_id = db.Column(db.Integer)
     hotel_name = db.Column(db.Text())
-    check_in = db.Column(db.Date)
-    check_out = db.Column(db.Date)
-    adults_room1 = db.Column(db.Integer)
-    rooms = db.Column(db.Integer)
+    check_in = db.Column(db.String(100))
+    check_out = db.Column(db.String(100))
+    adults_room1 = db.Column(db.String(100))
+    rooms = db.Column(db.String(100))
     room_name = db.Column(db.Text())
-    total_pay = db.Column(db.Numeric)
-    free_cancellation = db.Column(db.Boolean)
-    cancel_before = db.Column(db.Date)
-    booked_on = db.Column(db.Date, default=db.func.now())
+    total_pay = db.Column(db.Text())
+    free_cancellation = db.Column(db.String(100))
+    cancel_before = db.Column(db.String(100))
+    booked_on = db.Column(db.Date)
 
-    def __init__(self, booking_id, user_id, hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on):
-        self.user_id = user_id
-        self.booking_id = booking_id
+    # , default=db.func.now()
+
+    def __init__(self, hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on):
         self.hotel_id = hotel_id
         self.hotel_name = hotel_name
         self.check_in = check_in
@@ -171,7 +173,7 @@ def show_hotel_details():
     hotel_address = output_hotel_details['property_description']['address']['fullAddress']
     tagline = output_hotel_details['property_description']['tagline']
     freebies = output_hotel_details['property_description']['freebies']
-    hotel_price = output_hotel_details['property_description']['featuredPrice']['currentPrice']['formatted']
+    hotel_price = output_hotel_details['property_description']['featuredPrice']['currentPrice']['plain']
     hotel_rooms = output_hotel_details['property_description']['roomTypeNames']
 
     # get_hotel_photos defined in helpers
@@ -220,6 +222,9 @@ def confirm_booking():
 @login_required
 def your_bookings():
     today = date.today()
+    free_cancellation = False
+    cancel_before = today
+    booked_on = today
 
     if request.method == 'POST':
         hotel_id = request.form.get('hotel_id')
@@ -232,19 +237,19 @@ def your_bookings():
         print(total_pay)
         free_cancellation = request.form.get('free_cancellation')
         print(free_cancellation)
-        cancel_before = request.form.get('cancel_before')
-        print(cancel_before)
+        if free_cancellation == True:
+            cancel_before = request.form.get('cancel_before')
+            print(cancel_before)
 
         # enter booking into the database
-        data = Booking(hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on=today)
+        data = Booking(hotel_id, hotel_name, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on)
         db.session.add(data)
         db.session.commit()
         flash('Your booking is confirmed', 'success')
         return render_template('your_bookings.html', name=session['username'], today=today, hotel_id=hotel_id, hotel_name=hotel_name,
-                           room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation)
+                           room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation, cancel_before=cancel_before)
     else:
-        return render_template('your_bookings.html', name=session['username'], hotel_id=hotel_id, hotel_name=hotel_name,
-                           room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation)
+        return render_template('your_bookings.html', name=session['username'])
 
 
 @app.route("/register", methods=['GET', 'POST'])

@@ -79,7 +79,7 @@
 
       {% if room.ratePlans[0].price.nightlyPriceBreakdown %} {% set total_pay =
         room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].value %}
-      <p> Total to pay for your stay: <span class="font-bold"> {{ total_pay }} </span> 
+      <p> Total to pay for your stay: <span class="font-bold"> ${{ total_pay }} </span> 
         <span>
           {{
           room.ratePlans[0].price.nightlyPriceBreakdown.additionalColumns[1].heading
@@ -88,8 +88,8 @@
       </p>
       {% else %} {% set total_pay = hotel_price * stay_duration %}
 
-      <p>The average price per night is {{hotel_price}}</p>
-      <p>Total to pay for your stay:  <span class="font-bold"> {{ total_pay }}</span>
+      <p>The average price per night is ${{hotel_price}}</p>
+      <p>Total to pay for your stay:  <span class="font-bold"> ${{ total_pay }}</span>
         <span> for {{ stay_duration }} nights </span>
        </p>
 
@@ -107,9 +107,6 @@
   <p> Free cancellation: {{ free_cancellation }}</p>
   {% if free_cancellation %}
   {% set cancel_before = room.ratePlans[0].cancellation.cancellationDate %}
-  <p> Cancel before:  {{ cancel_before }}</p>
-  {% else %}
-  {% set cancel_before = today %}
   <p> Cancel before:  {{ cancel_before }}</p>
   {% endif %}
   
