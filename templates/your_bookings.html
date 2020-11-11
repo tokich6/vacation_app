@@ -13,23 +13,75 @@
 
     <ul class="w-full p-4">
       {% for booking in bookings %}
-      <h2>{{ booking.city_name}}, {{ booking.country_code }}</h2>
-      <p>Check in: {{ booking.check_in }} Check out: {{ booking.check_out }}</p>
+      <h2 class="font-bold mr-1 text-teal-500">
+        {{ booking.city_name}}, {{ booking.country_code }}
+      </h2>
+      <p class="mr-1">
+        Check in:
+        <span class="text-teal-500 font-bold"> {{ booking.check_in }} </span>
+        Check out:
+        <span class="text-teal-500 font-bold"> {{ booking.check_out }} </span>
+      </p>
 
       <li
         class="flex items-center justify-between mt-2 mb-4 p-4 bg-gray-300 shadow-lg"
       >
-        <p>
-          Hotel name: <span class="font-bold"> {{ booking.hotel_name }} </span>
-        </p>
-        <p>Status: Confirmed</p>
-        <p>${{ booking.total_pay }}</p>
-        
-        {% if booking.free_cancellation == True %}
-        <button>Cancel</button>
-        {% endif %}
-      </li>
+        <div>
+          <p>
+            Hotel name:
+            <span class="font-bold text-teal-500">
+              {{ booking.hotel_name }}
+            </span>
+          </p>
+          <p>
+            Status: <span class="text-teal-500 font-bold"> Confirmed </span>
+          </p>
+          <p>
+            Total due: <span class="font-bold"> ${{ booking.total_pay }} </span>
+          </p>
+        </div>
 
+        <div>
+          {% if booking.free_cancellation == True and today <
+          booking.cancel_before %}
+          <button
+            class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+            type="submit"
+          >
+            Cancel
+          </button>
+          <p class="italic text-sm">
+            (Free cancellation until {{ booking.cancel_before }})
+          </p>
+          {# cancel by date has passed #} {% elif booking.free_cancellation ==
+          True and today >= booking.cancel_before %}
+          <button
+            class="bg-teal-500 text-white font-bold py-2 px-4 border-b-4 border-teal-700 rounded opacity-50 cursor-not-allowed"
+          >
+            Cancel
+          </button>
+          <p class="italic text-sm">(Cancel by date has passed)</p>
+
+          {% else %}
+          <button
+            class="bg-teal-500 text-white font-bold py-2 px-4 border-b-4 border-teal-700 rounded opacity-50 cursor-not-allowed"
+          >
+            Cancel
+          </button>
+          <p class="italic text-sm">(Reservation is non-refundable)</p>
+          {% endif %}
+
+          <div class="pt-2">
+            <button
+              class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+            >
+              Download confirmation
+            </button>
+          </div>
+        </div>
+      </li>
+      {% else %}
+      <li class="font-bold text-teal-500 text-center">No bookings found</li>
       {% endfor %}
     </ul>
   </section>

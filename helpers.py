@@ -7,7 +7,7 @@ from datetime import date
 
 API_KEY = environ.get('API_KEY')
 
-# find the id of the typed in location/destination
+# find the id of the location/destination
 def search_location_id(location):
     # Contact API
     try:

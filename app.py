@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# jsonify, session
+# jsonify, 
 # from flask.ext.session import Session
 # from tempfile import mkdtemp
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -235,15 +235,11 @@ def your_bookings():
 
     if request.method == 'POST':
         hotel_id = request.form.get('hotel_id')
-        print(hotel_id)
         hotel_name = request.form.get('hotel_name')
-        print(hotel_name)
         city_name = request.form.get('city_name')
         country_code = request.form.get('country_code')
         room_name = request.form.get('room_name')
-        print(room_name)
         total_pay = request.form.get('total_pay')
-        print(total_pay)
         free_cancellation = str_to_bool(request.form.get('free_cancellation'))
         print(type(free_cancellation))
         if free_cancellation == True:
@@ -252,14 +248,16 @@ def your_bookings():
 
         # enter booking details into the database
         data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on)
-        # get current user id and assign it to user_id booking entry
+        # get current user id 
         current_user = db.session.query(Profile).filter(Profile.id == session['user_id']).first()
+        # assign it to booking entry foreign key
         data.user_id = current_user.id
         db.session.add(data)
         db.session.commit()
+        # get bookings info from db for current user
+        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
         flash('Your booking is confirmed', 'success')
-        return render_template('your_bookings.html', name=session['username'], today=today, hotel_id=hotel_id, hotel_name=hotel_name,
-                           room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation, cancel_before=cancel_before)
+        return render_template('your_bookings.html', today=today, bookings=bookings)
     else:
         bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
 
@@ -354,7 +352,7 @@ def login():
         if next_url:
             return redirect(next_url)
         flash('You are successfully logged in!', 'success')
-        return redirect(url_for("index"))
+        return redirect(url_for("home"))
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
