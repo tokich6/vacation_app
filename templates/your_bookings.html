@@ -1,15 +1,38 @@
 {% extends "layout.html" %} {% block title %} Let's book your next getaway!
 {%endblock %} {% block main %}
 
-<section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-  <!-- flash messages start -->
-  {% include 'messages.html' %}
-  <!-- flash messages end -->
+<section class="h-screen">
+  <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- flash messages start -->
+    {% include 'messages.html' %}
+    <!-- flash messages end -->
 
-  <h1>Welcome to your hotel bookings' dashboard, {{ name }}</h1>
-  
+    <h1 class="py-4 text-teal-500 uppercase font-semibold text-center">
+      Your dashboard
+    </h1>
 
+    <ul class="w-full p-4">
+      {% for booking in bookings %}
+      <h2>{{ booking.city_name}}, {{ booking.country_code }}</h2>
+      <p>Check in: {{ booking.check_in }} Check out: {{ booking.check_out }}</p>
 
+      <li
+        class="flex items-center justify-between mt-2 mb-4 p-4 bg-gray-300 shadow-lg"
+      >
+        <p>
+          Hotel name: <span class="font-bold"> {{ booking.hotel_name }} </span>
+        </p>
+        <p>Status: Confirmed</p>
+        <p>${{ booking.total_pay }}</p>
+        
+        {% if booking.free_cancellation == True %}
+        <button>Cancel</button>
+        {% endif %}
+      </li>
+
+      {% endfor %}
+    </ul>
+  </section>
 </section>
 
 {% endblock %}

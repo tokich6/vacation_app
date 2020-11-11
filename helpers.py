@@ -117,3 +117,8 @@ def get_days(start, end):
 def str_to_bool(string):
     d = {'True': True, 'False': False}
     return d.get(string, string)
+
+# to be used for cancel_before date - the API returns different formats (incl time, letters attached to date)
+def reduce_str_len(str):
+    str = str[0:10]
+    return str

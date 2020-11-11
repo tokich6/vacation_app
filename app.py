@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool
+from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len
 
 # Configure application
 app = Flask(__name__)
@@ -100,7 +100,8 @@ db.create_all()
 
 # ROUTES START HERE
 @app.route("/", methods=['GET', 'POST'])
-def index():
+@login_required
+def home():
     # Set min date input for check_in & check_out
     tomorrow = date.today() + timedelta(days=1)
     day_after = date.today() + timedelta(days=2)
@@ -108,6 +109,7 @@ def index():
 
 
 @app.route("/hotels", methods=['GET', 'POST'])
+@login_required
 def list_hotels():
     if request.method == 'GET':
         return redirect("/")
@@ -153,6 +155,7 @@ def list_hotels():
 
 
 @app.route("/hotels/details", methods=['GET', 'POST'])
+@login_required
 def show_hotel_details():
     # add POST method
     # hidden input value in hotels.html
@@ -244,8 +247,7 @@ def your_bookings():
         free_cancellation = str_to_bool(request.form.get('free_cancellation'))
         print(type(free_cancellation))
         if free_cancellation == True:
-            cancel_before = request.form.get('cancel_before')
-            cancel_before = cancel_before[:-6]
+            cancel_before = reduce_str_len(request.form.get('cancel_before')) 
             print(cancel_before)
 
         # enter booking details into the database
@@ -259,7 +261,9 @@ def your_bookings():
         return render_template('your_bookings.html', name=session['username'], today=today, hotel_id=hotel_id, hotel_name=hotel_name,
                            room_name=room_name, total_pay=total_pay, free_cancellation=free_cancellation, cancel_before=cancel_before)
     else:
-        return render_template('your_bookings.html', name=session['username'])
+        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
+
+        return render_template('your_bookings.html', today=today, bookings=bookings)
 
 
 @app.route("/register", methods=['GET', 'POST'])
