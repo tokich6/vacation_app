@@ -1,8 +1,9 @@
 from os import environ
 from datetime import date, timedelta
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, render_template, request, redirect, session, flash, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
+import pdfkit
 
 # jsonify, 
 # from flask.ext.session import Session
@@ -263,6 +264,16 @@ def your_bookings():
 
         return render_template('your_bookings.html', today=today, bookings=bookings)
 
+@app.route("/downloads")
+@login_required
+def generate_pdf():
+    pdf_content = render_template('pdf_template.html')
+    pdf = pdfkit.from_string(pdf_content, False)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
+    return response
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
