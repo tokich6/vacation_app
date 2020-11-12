@@ -34,7 +34,7 @@
             </span>
           </p>
           <p>
-            Status: <span class="text-teal-500 font-bold"> Confirmed </span>
+            Status: <span class="text-teal-500 font-bold"> {{ booking.status }} </span>
           </p>
           <p>
             Total due: <span class="font-bold"> ${{ booking.total_pay }} </span>
@@ -44,12 +44,20 @@
         <div>
           {% if booking.free_cancellation == True and today <
           booking.cancel_before %}
-          <button
-            class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
-            type="submit"
-          >
-            Cancel
-          </button>
+          <form action="{{ url_for('cancel_booking') }}" method="POST">
+            <input
+              type="hidden"
+              name="booking_id"
+              value="{{booking.booking_id}}"
+            />
+            <button
+              class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+              type="submit"
+            >
+              Cancel
+            </button>
+          </form>
+
           <p class="italic text-sm">
             (Free cancellation until {{ booking.cancel_before }})
           </p>
@@ -69,19 +77,34 @@
             Cancel
           </button>
           <p class="italic text-sm">(Reservation is non-refundable)</p>
-          {% endif %}
+          {% endif %} {# download pdf confirmation #}
+          <form action="{{ url_for('generate_pdf') }}" method="POST">
+            <input
+              type="hidden"
+              name="booking_id"
+              value="{{booking.booking_id}}"
+            />
 
-          <div class="pt-2">
-            <button
-              class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
-            >
-              Download confirmation
-            </button>
-          </div>
+            <div class="pt-2">
+              <button
+                class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+                type="submit"
+              >
+                Download confirmation
+              </button>
+            </div>
+          </form>
         </div>
       </li>
       {% else %}
-      <li class="font-bold text-teal-500 text-center">No bookings found</li>
+      <li class="font-bold text-teal-500 text-center text-lg">
+        No bookings found :(
+      </li>
+      <div class="text-center mt-4">
+        <a class="font-bold text-teal-500 text-lg" href="/">
+          Let's find a place for you
+        </a>
+      </div>
       {% endfor %}
     </ul>
   </section>

@@ -75,10 +75,12 @@ class Booking(db.Model):
     total_pay = db.Column(db.Numeric)
     free_cancellation = db.Column(db.Boolean)
     cancel_before = db.Column(db.Date)
+    status = db.Column(db.String(20))
+    guest_name = db.Column(db.String(100))
     booked_on = db.Column(db.Date)
 
 
-    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on):
+    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on):
         self.hotel_id = hotel_id
         self.hotel_name = hotel_name
         self.city_name = city_name
@@ -91,6 +93,8 @@ class Booking(db.Model):
         self.total_pay = total_pay
         self.free_cancellation = free_cancellation
         self.cancel_before = cancel_before
+        self.status = status
+        self.guest_name = guest_name
         self.booked_on = booked_on
 
 
@@ -100,7 +104,7 @@ db.create_all()
 
 
 # ROUTES START HERE
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/")
 @login_required
 def home():
     # Set min date input for check_in & check_out
@@ -109,66 +113,49 @@ def home():
     return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
 
 
-@app.route("/hotels", methods=['GET', 'POST'])
+@app.route("/hotels", methods=['POST'])
 @login_required
 def list_hotels():
-    if request.method == 'GET':
+    # extract parameters from the search form
+    destination = request.form.get('destination')
+    global check_in
+    check_in = request.form.get('check-in')
+    global check_out
+    check_out = request.form.get('check-out')
+    global rooms
+    rooms = request.form.get('rooms')
+    global adults_room1
+    adults_room1 = request.form.get('adult1')
+
+    # search_location_id defined in helpers.py
+    destination_id = search_location_id(destination)
+
+    if not destination:
+        flash('Please type in a destination', 'error')
+        return redirect("/")
+    elif not check_in or not check_out:
+        flash('Please provide a valid check-in and check-out date', 'error')
         return redirect("/")
     else:
-        # extract parameters from the search form
-        destination = request.form.get('destination')
-        print(destination)
-        global check_in
-        check_in = request.form.get('check-in')
-        print(check_in)
-        global check_out
-        check_out = request.form.get('check-out')
-        print(check_out)
-        global rooms
-        rooms = request.form.get('rooms')
-        print(rooms)
-        global adults_room1
-        adults_room1 = request.form.get('adult1')
-        print(adults_room1)
-
-        # search_location_id defined in helpers.py
-        destination_id = search_location_id(destination)
-        print(f'destination id is { destination_id  }')
-
-        if not destination:
-            flash('Please type in a destination', 'error')
-            return redirect("/")
-        elif not check_in or not check_out:
-            flash('Please provide a valid check-in and check-out date', 'error')
-            return redirect("/")
-        else:
-            # list_properties defined in helpers.py
-            output = list_properties(
-                destination_id, check_in, check_out, adults_room1)
-            if output == None:
-                return render_template('400.html')
-            header = output['header']
-            totalCount = output['totalCount']
-            # an array of hotels' list
-            hotels = output['hotels']
-            # print(hotels[0])
-            return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
+        # list_properties defined in helpers.py
+        output = list_properties(destination_id, check_in, check_out, adults_room1)
+        if output == None:
+            return render_template('400.html')
+        header = output['header']
+        totalCount = output['totalCount']
+        # an array of hotels' list
+        hotels = output['hotels']
+        # print(hotels[0])
+        return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
 
 
-@app.route("/hotels/details", methods=['GET', 'POST'])
+@app.route("/hotels/details", methods=['POST'])
 @login_required
 def show_hotel_details():
-    # add POST method
     # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
-    print(f'Hotel_id is: {hotel_id}')
-    print(check_in)
-    print(check_out)
-    print(adults_room1)
-
     # get_hotel_details function defined in helpers
-    output_hotel_details = get_hotel_details(
-        hotel_id, check_in, check_out, adults_room1)
+    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
     # save necessary output results as variables to access in template
     if output_hotel_details == None:
         return render_template('500.html')
@@ -195,44 +182,37 @@ def show_hotel_details():
     return render_template('hotel_details.html', hotelID=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address,
                            hotel_price=hotel_price, amenities=amenities, what_is_around=what_is_around, tagline=tagline, freebies=freebies, hotel_rooms=hotel_rooms, images_url_list=images_url_list)
 
-
-@app.route("/booking", methods=['GET', 'POST'])
+@app.route("/booking", methods=['POST'])
 @login_required
 def confirm_booking():
-    if request.method == 'POST':
+    hotel_id = request.form.get('hotel_id')
+    hotel_price = request.form.get('hotel_price')
 
-        hotel_id = request.form.get('hotel_id')
-        hotel_price = request.form.get('hotel_price')
+    # contact API to check details as well as room rates before final booking confirmation
+    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
+    if output_hotel_details == None:
+        return render_template('500.html')
+    hotel_name = output_hotel_details['property_description']['name']
+    hotel_stars = output_hotel_details['property_description']['starRating']
+    hotel_address = output_hotel_details['property_description']['address']['fullAddress']
+    city_name = output_hotel_details['property_description']['address']['cityName']
+    country_code = output_hotel_details['property_description']['address']['countryCode']
+    best_room = output_hotel_details['first_room']
+    # get_days defined in helpers.py
+    stay_duration = get_days(check_in, check_out)
 
-        # contact API to check details as well as room rates before final booking confirmation
-        output_hotel_details = get_hotel_details(
-            hotel_id, check_in, check_out, adults_room1)
-        if output_hotel_details == None:
-            return render_template('500.html')
-        hotel_name = output_hotel_details['property_description']['name']
-        hotel_stars = output_hotel_details['property_description']['starRating']
-        hotel_address = output_hotel_details['property_description']['address']['fullAddress']
-        city_name = output_hotel_details['property_description']['address']['cityName']
-        country_code = output_hotel_details['property_description']['address']['countryCode']
-        best_room = output_hotel_details['first_room']
-        # get_days defined in helpers.py
-        stay_duration = get_days(check_in, check_out)
-
-        return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
+    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
                                hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
                                stay_duration=stay_duration, city_name=city_name, country_code=country_code)
 
-    # else request is GET
-    return redirect('/')
-
-
-@app.route("/account", methods=['GET', 'POST'])
+@app.route("/account", methods=['GET', 'POST', 'PATCH'])
 @login_required
 def your_bookings():
     today = date.today()
     free_cancellation = False
     cancel_before = today
     booked_on = today
+    status = 'Confirmed'
 
     if request.method == 'POST':
         hotel_id = request.form.get('hotel_id')
@@ -241,39 +221,54 @@ def your_bookings():
         country_code = request.form.get('country_code')
         room_name = request.form.get('room_name')
         total_pay = request.form.get('total_pay')
+        guest_name = request.form.get('guest_name')
         free_cancellation = str_to_bool(request.form.get('free_cancellation'))
-        print(type(free_cancellation))
         if free_cancellation == True:
             cancel_before = reduce_str_len(request.form.get('cancel_before')) 
-            print(cancel_before)
 
         # enter booking details into the database
-        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, booked_on)
+        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on)
         # get current user id 
         current_user = db.session.query(Profile).filter(Profile.id == session['user_id']).first()
         # assign it to booking entry foreign key
         data.user_id = current_user.id
         db.session.add(data)
         db.session.commit()
-        # get bookings info from db for current user
+        # get all bookings from db for current user
         bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
         flash('Your booking is confirmed', 'success')
         return render_template('your_bookings.html', today=today, bookings=bookings)
     else:
         bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
-
         return render_template('your_bookings.html', today=today, bookings=bookings)
 
-@app.route("/downloads")
+@app.route("/downloads", methods=['POST'])
 @login_required
 def generate_pdf():
-    pdf_content = render_template('pdf_template.html')
+    booking_id = request.form.get('booking_id')
+    booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
+    
+    pdf_content = render_template('pdf_template.html', booking_details=booking_details)
     pdf = pdfkit.from_string(pdf_content, False)
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=hotel_confirmation.pdf'
     return response
+
+@app.route("/cancellation", methods=['POST'])
+@login_required
+def cancel_booking():
+    today = date.today()
+    booking_id = request.form.get('booking_id')
+    booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
+    booking_details.status = 'Cancelled'
+    print(booking_details.status)
+    db.session.commit()
+
+    bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
+    return render_template('your_bookings.html', today=today, bookings=bookings)
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
