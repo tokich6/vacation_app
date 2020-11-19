@@ -235,11 +235,11 @@ def your_bookings():
         db.session.add(data)
         db.session.commit()
         # get all bookings from db for current user
-        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
+        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
         flash('Your booking is confirmed', 'success')
         return render_template('your_bookings.html', today=today, bookings=bookings)
     else:
-        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
+        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
         return render_template('your_bookings.html', today=today, bookings=bookings)
 
 @app.route("/downloads", methods=['POST'])
@@ -248,7 +248,8 @@ def generate_pdf():
     booking_id = request.form.get('booking_id')
     booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
     
-    pdf_content = render_template('pdf_template.html', booking_details=booking_details)
+    pdf_content = render_template('pdf_template.html', booking=booking_details)
+    # css = ['./static/pdf.css']
     pdf = pdfkit.from_string(pdf_content, False)
 
     response = make_response(pdf)

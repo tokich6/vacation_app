@@ -9,7 +9,7 @@
 
 </head>
 
-<body class="bg-yellow-200">
+<body class="bg-yellow-200 font-serif tracking-wide">
     <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
             <img src="../static/imgs/hotelbed-logo.jpg" alt="hotel bed" width="40px" height="30px" class="rounded">
@@ -25,7 +25,7 @@
         <div class="nav lg:flex lg:items-center lg:w-auto lg:block flex-grow w-full">
           <div class="text-sm lg:flex-grow  uppercase">
             <a href="/account" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-              Your bookings
+              Your dashboard
             </a>
             <!-- <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
               Our partners
@@ -34,7 +34,7 @@
               Need help?
             </a>
           </div>
-          <div>
+          <div class="text-right">
             {% if 'username' in session %}
             <span class="inline-block  px-4 py-2 leading-none text-white mt-4 lg:mt-0">Hello there, {{ session.username }}!</span>
             <a href="/logout" class="inline-block  px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
@@ -49,8 +49,8 @@
 
       <main class="my-8">{% block main %} {% endblock %}</main>
 
-      <footer class="flex justify-center items-center bg-teal-500 p-6">
-        <h1>Home Away @2020 All rights reserved. </h1>
+      <footer class="bottom-0 left-0 right-0">
+        {% include 'footer.html' %}
 
       </footer>  
         
