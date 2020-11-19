@@ -28,12 +28,12 @@ def search_location_id(location):
     except (KeyError, TypeError, ValueError):
         return None    
 
-def list_properties(id, check_in, check_out, adults1):
+def list_properties(id, check_in, check_out, adults1, adults2, adults3, adults4, sort_order):
     # contact api and find available properties as per search parameteres
     try:
         url = "https://hotels4.p.rapidapi.com/properties/list"
-        querystring = {"currency":"USD","locale":"en_US","sortOrder":"GUEST_RATING",
-        "destinationId":{id},"pageNumber":"1","checkIn":{check_in},"checkOut":{check_out},"pageSize":"25","adults1":{adults1}}
+        querystring = {"currency":"USD","locale":"en_US","sortOrder":{sort_order},
+        "destinationId":{id},"pageNumber":"1","checkIn":{check_in},"checkOut":{check_out},"pageSize":"25","adults1":{adults1},"adults2":{adults2},"adults3":{adults3},"adults4":{adults4}}
         headers = {
         'x-rapidapi-host': "hotels4.p.rapidapi.com",
         'x-rapidapi-key': API_KEY

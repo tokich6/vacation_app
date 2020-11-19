@@ -40,6 +40,10 @@ function plusSlides(n) {
   showSlides(slideIndex += n);
 }
 
+// function getValue(obj){
+//   console.log(obj.value);
+//   return obj.value;
+// }
 
 
 
