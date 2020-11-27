@@ -53,11 +53,11 @@ def list_properties(id, check_in, check_out, adults1, sort_order, adults2=None, 
     except (KeyError, TypeError, ValueError):
         return None    
 
-def get_hotel_details(id, check_in, check_out, adults1):
+def get_hotel_details(id, check_in, check_out, adults1, adults2=None, adults3=None, adults4=None):
     # contact api to get individual hotel details
     try:
         url = "https://hotels4.p.rapidapi.com/properties/get-details"
-        querystring = {"locale":"en_US","currency":"USD","checkOut":{check_out},"adults1":{adults1},"checkIn":{check_in},"id":{id}}
+        querystring = {"locale":"en_US","currency":"USD","checkOut":{check_out},"adults1":{adults1},"checkIn":{check_in},"id":{id}, "adults2":{adults2}, "adults3":{adults3}, "adults4":{adults4}}
         headers = {
         'x-rapidapi-host': "hotels4.p.rapidapi.com",
         'x-rapidapi-key': API_KEY
@@ -123,3 +123,10 @@ def str_to_bool(string):
 def reduce_str_len(str):
     str = str[0:10]
     return str
+
+def add_together(*args):
+  result = 0
+  for x in args:
+    if x is not None:
+      result += int(x)
+  return result     

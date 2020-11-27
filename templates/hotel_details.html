@@ -104,7 +104,9 @@
               Rooms types in this property:
             </h4>
             {% for room in hotel_rooms %}
+            {% if room != '' %}
             <li class="mt-2 text-base leading-6 text-gray-700">{{ room }}</li>
+            {% endif %}
             {% endfor %}
           </ul>
           {% endif %}
@@ -124,7 +126,7 @@
         class="inline-flex justify-end bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 mt-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
         type="submit"
       >
-        Book from ${{ hotel_price }} / per night
+        Book from ${{ hotel_price }} / per room per night
       </button>
     </form>
   </div>

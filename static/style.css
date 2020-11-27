@@ -13,9 +13,9 @@ html, body {
 
 input[type="date"]::-webkit-calendar-picker-indicator { 
   cursor: pointer;
-  color: #38b2ac;
+  color: #3f817e;
   /* filter: invert(1); */
-  filter: invert(100%) sepia() saturate(1000%) hue-rotate(0deg)
+  /* filter: invert(100%) sepia() saturate(1000%) hue-rotate(0deg) */
  }
 
 

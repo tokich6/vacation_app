@@ -11,7 +11,7 @@ import pdfkit
 # from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len
+from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len, add_together
 
 # Configure application
 app = Flask(__name__)
@@ -27,6 +27,7 @@ adults_room1 = ''
 adults_room2 = None
 adults_room3 = None
 adults_room4 = None
+total_guests = ''
 
 # DATABASE SETUP START
 ENV = 'dev'
@@ -153,7 +154,10 @@ def list_hotels():
         adults_room2 = None
         adults_room3 = None
         adults_room4 = None    
-        
+
+    global total_guests
+    total_guests = add_together(adults_room1, adults_room2, adults_room3, adults_room4) 
+    # to add filter functionality later
     sort_order = "GUEST_RATING"
 
     # search_location_id defined in helpers.py
@@ -185,7 +189,7 @@ def show_hotel_details():
     # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
     # get_hotel_details function defined in helpers
-    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
+    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
     # save necessary output results as variables to access in template
     if output_hotel_details == None:
         return render_template('500.html')
@@ -219,7 +223,7 @@ def confirm_booking():
     hotel_price = request.form.get('hotel_price')
 
     # contact API to check details as well as room rates before final booking confirmation
-    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1)
+    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
     if output_hotel_details == None:
         return render_template('500.html')
     hotel_name = output_hotel_details['property_description']['name']
@@ -231,11 +235,11 @@ def confirm_booking():
     # get_days defined in helpers.py
     stay_duration = get_days(check_in, check_out)
 
-    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, adults_room1=adults_room1,
+    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, total_guests=total_guests,
                                hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
                                stay_duration=stay_duration, city_name=city_name, country_code=country_code)
 
-@app.route("/account", methods=['GET', 'POST', 'PATCH'])
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def your_bookings():
     today = date.today()

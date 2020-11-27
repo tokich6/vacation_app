@@ -41,7 +41,7 @@
 
     <p>
       The booking is for
-      <span class="font-bold"> {{adults_room1}} </span> {%if adults_room1 == '1' %} adult {%else%} adults {% endif %} staying in
+      <span class="font-bold"> {{ total_guests }} </span> {%if total_guests == '1' %} adult {%else%} adults {% endif %} staying in
       <span class="font-bold"> {{hotel_rooms}} </span> {%if hotel_rooms == '1' %} room {%else%} rooms {% endif %}
     </p>
   </section>
@@ -79,7 +79,7 @@
 
       <p>The average price per night is ${{ hotel_price }}</p>
 
-      {% set total_pay = hotel_price|int * stay_duration|int %} 
+      {% set total_pay = hotel_price|int * stay_duration|int * hotel_rooms|int %} 
   
       <p>Total to pay for your stay:  <span class="font-bold"> ${{ total_pay }}</span>
         <span> for {{ stay_duration }} {% if stay_duration == 1 %} night {%else%} nights {% endif %} </span>
