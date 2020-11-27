@@ -24,9 +24,9 @@ check_in = ''
 check_out = ''
 rooms = ''
 adults_room1 = ''
-adults_room2 = ''
-adults_room3 = ''
-adults_room4 = ''
+adults_room2 = None
+adults_room3 = None
+adults_room4 = None
 
 # DATABASE SETUP START
 ENV = 'dev'
@@ -116,6 +116,10 @@ def home():
     # rooms = get_value(obj)
     return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
 
+# @app.route("/<room_data>")
+# @login_required
+# def get_rooms(room_data=1):
+#     return room_data
 
 @app.route("/hotels", methods=['POST'])
 @login_required
@@ -131,12 +135,25 @@ def list_hotels():
     global adults_room1
     adults_room1 = request.form.get('adult1')
     global adults_room2
-    adults_room1 = request.form.get('adult2')
     global adults_room3
-    adults_room1 = request.form.get('adult3')
     global adults_room4
-    adults_room1 = request.form.get('adult4')
-    
+    if rooms == '2':
+        adults_room2 = request.form.get('adult2')
+        adults_room3 = None
+        adults_room4 = None
+    elif rooms == '3':
+        adults_room2 = request.form.get('adult2')
+        adults_room3 = request.form.get('adult3')
+        adults_room4 = None
+    elif rooms == '4':
+        adults_room2 = request.form.get('adult2')
+        adults_room3 = request.form.get('adult3')
+        adults_room4 = request.form.get('adult4')
+    else:
+        adults_room2 = None
+        adults_room3 = None
+        adults_room4 = None    
+        
     sort_order = "GUEST_RATING"
 
     # search_location_id defined in helpers.py
@@ -150,7 +167,8 @@ def list_hotels():
         return redirect("/")
     else:
         # list_properties defined in helpers.py
-        output = list_properties(destination_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4, sort_order)
+        output = list_properties(destination_id, check_in, check_out, adults_room1, sort_order, adults_room2, adults_room3, adults_room4)
+        # print(output)
         if output == None:
             return render_template('400.html')
         header = output['header']

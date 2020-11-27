@@ -2,11 +2,9 @@ let navToggle = document.querySelector('.nav');
 let alert = document.querySelector('#alert');
 let btn = document.querySelector('#btn');
 let slideIndex = 1;
+
 let rooms = document.querySelector('#rooms');
-let adults1 = document.querySelector('.adults-room1');
-let adults2 = document.querySelector('.adults-room2');
-let adults3 = document.querySelector('.adults-room3');
-let adults4 = document.querySelector('.adults-room4');
+let roomsWidget = document.querySelector('.rooms-widget');
 
 
 showSlides(slideIndex);
@@ -46,27 +44,21 @@ function plusSlides(n) {
   showSlides(slideIndex += n);
 }
 
-//dynamic rooms options
-rooms.onchange = function() {
-  let roomsNumber = []
-  roomsNumber.length = rooms.value;
-  console.log(roomsNumber.length);
-  toggleRooms(roomsNumber);
+//dynamic room options
+rooms.onchange = function () {
+  roomsValue = rooms.value;
+  // console.log(roomsValue);
+  let roomCollection = roomsWidget.children;
+
+  for (let i = 0; i < roomCollection.length; i++) {
+    // console.log(roomCollection[i]);
+    if (i + 1 <= roomsValue) {
+      roomCollection[i].classList.remove('hidden');
+      roomCollection[i].classList.add('selected');
+      } else {
+          roomCollection[i].classList.remove('selected');
+          roomCollection[i].classList.add('hidden');
+      }
+    }
 }
-
-function toggleRooms(rooms){
-  if (rooms.length === 2) {
-    adults2.classList.toggle('hidden');
-  } else if (rooms.length === 3) {
-    adults2.classList.toggle('hidden');
-    adults3.classList.toggle('hidden');
-  } else if (rooms.length === 4) {
-    adults2.classList.toggle('hidden');
-    adults3.classList.toggle('hidden');
-    adults4.classList.toggle('hidden');
-  }
-}
-
-
-
 

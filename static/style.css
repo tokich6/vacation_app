@@ -15,7 +15,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   color: #38b2ac;
   /* filter: invert(1); */
-  filter: invert(100%) sepia() saturate(10000%) hue-rotate(0deg)
+  filter: invert(100%) sepia() saturate(1000%) hue-rotate(0deg)
  }
 
 

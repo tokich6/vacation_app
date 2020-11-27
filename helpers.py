@@ -28,7 +28,7 @@ def search_location_id(location):
     except (KeyError, TypeError, ValueError):
         return None    
 
-def list_properties(id, check_in, check_out, adults1, adults2, adults3, adults4, sort_order):
+def list_properties(id, check_in, check_out, adults1, sort_order, adults2=None, adults3=None, adults4=None):
     # contact api and find available properties as per search parameteres
     try:
         url = "https://hotels4.p.rapidapi.com/properties/list"
@@ -39,6 +39,7 @@ def list_properties(id, check_in, check_out, adults1, adults2, adults3, adults4,
         'x-rapidapi-key': API_KEY
         }
         response = requests.request("GET", url, headers=headers, params=querystring)
+        # print(response.text)
     except requests.RequestException:
         return None     
      # Parse response
