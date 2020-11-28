@@ -1,59 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script
+      src="https://kit.fontawesome.com/2a5d97f99d.js"
+      crossorigin="anonymous"
+    ></script>
     <title>{% block title %}{% endblock %}</title>
+  </head>
 
-</head>
-
-<body class="bg-yellow-200 font-serif tracking-wide">
-    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-        <div class="flex items-center flex-shrink-0 text-white mr-6">
-            <img src="../static/imgs/hotelbed-logo.jpg" alt="hotel bed" width="40px" height="30px" class="rounded">
-              <span class="font-semibold text-xl tracking-tight px-2">
-            <a href="/">Home Away</a>
-          </span>
-        </div>
-        <div class="block lg:hidden">
-          <button id="btn"  class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-            <svg class ="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-          </button>
-        </div>
-        <div class="nav lg:flex lg:items-center lg:w-auto lg:block flex-grow w-full">
-          <div class="text-sm lg:flex-grow  uppercase">
-            <a href="/account" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-              Your dashboard
-            </a>
-            <!-- <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-              Our partners
-            </a> -->
-            <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
-              Need help?
-            </a>
+  <body class="bg-yellow-200 font-serif tracking-wide">
+    <div id="page-container">
+      <div id="content-wrap">
+        <nav
+          class="flex items-center justify-between flex-wrap bg-teal-500 p-6"
+        >
+          <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <img
+              src="../static/imgs/hotelbed-logo.jpg"
+              alt="hotel bed"
+              width="40px"
+              height="30px"
+              class="rounded"
+            />
+            <span class="font-semibold text-xl tracking-tight px-2">
+              <a href="/">Home Away</a>
+            </span>
           </div>
-          <div class="text-right">
-            {% if 'username' in session %}
-            <span class="inline-block  px-4 py-2 leading-none text-white mt-4 lg:mt-0">Hello there, {{ session.username }}!</span>
-            <a href="/logout" class="inline-block  px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
-              Log out?</a>
-            {% else %}
-            <a href="/login" class="inline-block  px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Login</a>
-            <a href="/register" class="inline-block  px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Create account</a>
-            {% endif %}
+          <div class="block lg:hidden">
+            <button
+              id="btn"
+              class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white"
+            >
+              <svg
+                class="fill-current h-3 w-3"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Menu</title>
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              </svg>
+            </button>
           </div>
-        </div>
-      </nav>
+          <div
+            class="nav lg:flex lg:items-center lg:w-auto lg:block flex-grow w-full"
+          >
+            <div class="text-sm lg:flex-grow uppercase">
+              <a
+                href="/about"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+              >
+                About
+              </a>
+              <a
+                href="/account"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
+              >
+                Your dashboard
+              </a>
+            </div>
+            <div class="text-right">
+              {% if 'username' in session %}
+              <span
+                class="inline-block px-4 py-2 leading-none text-white mt-4 lg:mt-0"
+                >Hello there, {{ session.username }}!</span
+              >
+              <a
+                href="/logout"
+                class="inline-block px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+              >
+                Log out?</a
+              >
+              {% else %}
+              <a
+                href="/login"
+                class="inline-block px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                >Login</a
+              >
+              <a
+                href="/register"
+                class="inline-block px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                >Create account</a
+              >
+              {% endif %}
+            </div>
+          </div>
+        </nav>
 
-      <main class="my-8">{% block main %} {% endblock %}</main>
+        <main class="my-8">{% block main %} {% endblock %}</main>
+      </div>
 
-      <footer class="bottom-0 left-0 right-0">
+      <footer>
         {% include 'footer.html' %}
+      </footer>
+    </div>
 
-      </footer>  
-        
-        <script src="{{url_for('static', filename='script.js')}}"></script>
-</body>
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+  </body>
 </html>

@@ -309,6 +309,9 @@ def cancel_booking():
     bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
     return render_template('your_bookings.html', today=today, bookings=bookings)
 
+@app.route("/about", methods=['GET'])
+def about():
+    return render_template('about.html')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
