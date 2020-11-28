@@ -27,7 +27,7 @@ adults_room1 = ''
 adults_room2 = None
 adults_room3 = None
 adults_room4 = None
-total_guests = ''
+total_adults = ''
 
 # DATABASE SETUP START
 ENV = 'dev'
@@ -74,6 +74,10 @@ class Booking(db.Model):
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
     adults_room1 = db.Column(db.Integer)
+    adults_room2 = db.Column(db.Integer)
+    adults_room3 = db.Column(db.Integer)
+    adults_room4 = db.Column(db.Integer)
+    total_adults = db.Column(db.Integer)
     rooms = db.Column(db.Integer)
     room_name = db.Column(db.Text())
     total_pay = db.Column(db.Numeric)
@@ -84,7 +88,7 @@ class Booking(db.Model):
     booked_on = db.Column(db.Date)
 
 
-    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on):
+    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4, total_adults, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on):
         self.hotel_id = hotel_id
         self.hotel_name = hotel_name
         self.city_name = city_name
@@ -92,6 +96,10 @@ class Booking(db.Model):
         self.check_in = check_in
         self.check_out = check_out
         self.adults_room1 = adults_room1
+        self.adults_room2 = adults_room2
+        self.adults_room3 = adults_room3
+        self.adults_room4 = adults_room4
+        self.total_adults = total_adults
         self.rooms = rooms
         self.room_name = room_name
         self.total_pay = total_pay
@@ -116,11 +124,6 @@ def home():
     day_after = date.today() + timedelta(days=2)
     # rooms = get_value(obj)
     return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
-
-# @app.route("/<room_data>")
-# @login_required
-# def get_rooms(room_data=1):
-#     return room_data
 
 @app.route("/hotels", methods=['POST'])
 @login_required
@@ -154,9 +157,11 @@ def list_hotels():
         adults_room2 = None
         adults_room3 = None
         adults_room4 = None    
+    
+    # add_together defined in helpers.py
+    global total_adults
+    total_adults = add_together(adults_room1, adults_room2, adults_room3, adults_room4) 
 
-    global total_guests
-    total_guests = add_together(adults_room1, adults_room2, adults_room3, adults_room4) 
     # to add filter functionality later
     sort_order = "GUEST_RATING"
 
@@ -176,11 +181,10 @@ def list_hotels():
         if output == None:
             return render_template('400.html')
         header = output['header']
-        totalCount = output['totalCount']
-        # an array of hotels' list
+        # a list of hotels
         hotels = output['hotels']
         # print(hotels[0])
-        return render_template('hotels.html', header=header, totalCount=totalCount, hotels=hotels)
+        return render_template('hotels.html', header=header, hotels=hotels)
 
 
 @app.route("/hotels/details", methods=['POST'])
@@ -190,7 +194,7 @@ def show_hotel_details():
     hotel_id = request.form.get('hotel_id')
     # get_hotel_details function defined in helpers
     output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
-    # save necessary output results as variables to access in template
+    
     if output_hotel_details == None:
         return render_template('500.html')
     amenities = output_hotel_details['amenities']
@@ -222,7 +226,7 @@ def confirm_booking():
     hotel_id = request.form.get('hotel_id')
     hotel_price = request.form.get('hotel_price')
 
-    # contact API to check details as well as room rates before final booking confirmation
+    # contact API to check availability before final booking confirmation
     output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
     if output_hotel_details == None:
         return render_template('500.html')
@@ -235,7 +239,7 @@ def confirm_booking():
     # get_days defined in helpers.py
     stay_duration = get_days(check_in, check_out)
 
-    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, total_guests=total_guests,
+    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, total_guests=total_adults,
                                hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
                                stay_duration=stay_duration, city_name=city_name, country_code=country_code)
 
@@ -244,6 +248,7 @@ def confirm_booking():
 def your_bookings():
     today = date.today()
     free_cancellation = False
+    # defaults to today if free cancellation is False
     cancel_before = today
     booked_on = today
     status = 'Confirmed'
@@ -256,12 +261,13 @@ def your_bookings():
         room_name = request.form.get('room_name')
         total_pay = request.form.get('total_pay')
         guest_name = request.form.get('guest_name')
+        # str_to_bool defined in helpers.py
         free_cancellation = str_to_bool(request.form.get('free_cancellation'))
         if free_cancellation == True:
             cancel_before = reduce_str_len(request.form.get('cancel_before')) 
 
         # enter booking details into the database
-        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on)
+        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4, total_adults, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on)
         # get current user id 
         current_user = db.session.query(Profile).filter(Profile.id == session['user_id']).first()
         # assign it to booking entry foreign key
@@ -298,7 +304,6 @@ def cancel_booking():
     booking_id = request.form.get('booking_id')
     booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
     booking_details.status = 'Cancelled'
-    print(booking_details.status)
     db.session.commit()
 
     bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()

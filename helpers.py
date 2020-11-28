@@ -28,6 +28,7 @@ def search_location_id(location):
     except (KeyError, TypeError, ValueError):
         return None    
 
+# adults2,3,4 are optional parameters
 def list_properties(id, check_in, check_out, adults1, sort_order, adults2=None, adults3=None, adults4=None):
     # contact api and find available properties as per search parameteres
     try:
