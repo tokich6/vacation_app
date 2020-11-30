@@ -45,20 +45,23 @@ function plusSlides(n) {
 }
 
 //dynamic room options
-rooms.onchange = function () {
-  roomsValue = rooms.value;
-  // console.log(roomsValue);
-  let roomCollection = roomsWidget.children;
-
-  for (let i = 0; i < roomCollection.length; i++) {
-    // console.log(roomCollection[i]);
-    if (i + 1 <= roomsValue) {
-      roomCollection[i].classList.remove('hidden');
-      roomCollection[i].classList.add('selected');
-      } else {
-          roomCollection[i].classList.remove('selected');
-          roomCollection[i].classList.add('hidden');
+if (window.location.pathname == '/') { 
+  rooms.onchange = function () {
+    roomsValue = rooms.value;
+    let roomCollection = roomsWidget.children;
+  
+    for (let i = 0; i < roomCollection.length; i++) {
+      if (i + 1 <= roomsValue) {
+        roomCollection[i].classList.remove('hidden');
+        roomCollection[i].classList.add('selected');
+        } else {
+            roomCollection[i].classList.remove('selected');
+            roomCollection[i].classList.add('hidden');
+        }
       }
-    }
+  }
 }
+
+
+
 
