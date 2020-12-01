@@ -1,0 +1,160 @@
+<form
+    action="{{ url_for('list_hotels')}}"
+    method="POST"
+    class="w-full max-w-xl shadow-lg rounded px-8 pt-6 pb-8 py-4 mx-auto mb-4 text-white bg-black"
+  >
+    <div class="destination-search mr-4">
+      <label class="inline-block" for="destination">Most popular destinations</label>
+      <select
+      class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+      name="destination"
+      id="destination"
+    > 
+      <option value="New York">New York</option>
+      <option value="Paris"> Paris </option>
+      <option value="London">London</option>
+      <option value="Miami">Miami</option>
+      <option value="Los Angeles">Los Angeles</option>
+      <option value="Rome">Rome</option>
+    </select>
+    
+    </div>
+    <div class="check-in-field">
+      <label class="inline-block" for="check-in">Check-in</label>
+      <input
+        class="appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="date"
+        name="check-in"
+        min="{{tomorrow}}"
+        value="{{tomorrow}}"
+      />
+    </div>
+    <div class="check-out-field">
+      <label class="inline-block" for="check-out">Check-out</label>
+      <input
+        class="appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none"
+        type="date"
+        name="check-out"
+        min="{{day_after}}"
+        value="{{day_after}}"
+      />
+    </div>
+  
+  
+      <div class="mr-4">
+        <label
+          class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+          for="rooms"
+          >Rooms</label
+        >
+        <select
+          class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+          name="rooms"
+          id="rooms"
+        >
+        
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+     
+      <div class="rooms-widget">
+    
+      <div class="adults-room1 mr-5 mb-4 selected">
+        <label
+          class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+          for="adult1"
+          >Adults Room 1</label
+        >
+        <select
+          class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+          name="adult1"
+          id="adult1"
+        >
+          <option value="2">2</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+     
+      <div class="adults-room2 mr-5 mb-4 hidden">
+        <label
+          class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+          for="adult2"
+          >Adults Room 2</label
+        >
+        <select
+          class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+          name="adult2"
+          id="adult2"
+        >
+          <option value="2">2</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    
+      <div class="adults-room3 mr-5 mb-4 hidden">
+        <label
+          class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+          for="adult3"
+          >Adults Room 3</label
+        >
+        <select
+          class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+          name="adult3"
+          id="adult3"
+        >
+          <option value="2">2</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    
+      <div class="adults-room4 mr-5 mb-4 hidden">
+        <label
+          class="inline-block appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
+          for="adult4"
+          >Adults Room 4</label
+        >
+        <select
+          class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer"
+          name="adult4"
+          id="adult4"
+        >
+          <option value="2">2</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>  
+    </div>
+
+    <div class="mb-8 mr-4 ml-2">
+      <label for="sort-hotels" class="inline-block">Sort hotels</label>
+      <select class="bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-pointer" 
+      name="sort-hotels" id="sort-hotels">
+        <option value="GUEST_RATING">Guest rating</option>
+        <option value="BEST_SELLER">Best seller</option>
+        <option value="PRICE">Price (low-to-high)</option>
+        <option value="PRICE_HIGHEST_FIRST">Price (high-to-low)</option>
+        <option value="STAR_RATING_LOWEST_FIRST">Star rating (lowest-to-highest)</option>
+        <option value="STAR_RATING_HIGHEST_FIRST">Star rating (highest-to-lowest)</option>
+      </select> 
+    </div>
+  
+    <div class="search-field-btn">
+      <button
+        class="w-full inline-flex bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded uppercase"
+        type="submit"
+      >
+        Search
+      </button>
+    </div>
+  </form>
+  

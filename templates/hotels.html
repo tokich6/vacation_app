@@ -4,31 +4,12 @@
 
 {% block main %}
 
-<h1 class="flex justify-center my-6">Hotels available in {{ header }} for your dates of travel</h1>
-
-<section id="sort" class="flex justify-center bg-transparent mr-8">
-  <form action="/hotels" method="POST">
-    <label for="sort-hotels"></label>
-    <select class="bg-transparent py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded" name="sort-hotels" id="sort-hotels">
-      <option value="GUEST_RATING">Guest rating</option>
-      <option value="BEST_SELLER">Best seller</option>
-      <option value="PRICE">Price (low-to-high)</option>
-      <option value="PRICE_HIGHEST_FIRST">Price (high-to-low)</option>
-      <option value="STAR_RATING_LOWEST_FIRST">Star rating (lowest-to-highest)</option>
-      <option value="STAR_RATING_HIGHEST_FIRST">Star rating (highest-to-lowest)</option>
-    </select> 
-  
-      <button
-      class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
-      type="submit"
-    >
-      Sort hotels
-    </button>
-  </form>
-</section>
+<h1 class="flex justify-center my-6 mx-4 text-center">Hotels available in {{ header }} for your dates of travel</h1>
 
 <section class="w-5/6 mx-auto flex">
+
   <ul class="w-full p-4">
+    <span class="text-sm italic text-right">(Hotels sorted by {{ sort_order }})</span>
     {% for hotel in hotels %}
     <li
       class="md:flex items-center justify-around mt-2 mb-4 p-4 bg-gray-300 shadow-lg"

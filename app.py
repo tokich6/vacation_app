@@ -162,8 +162,7 @@ def list_hotels():
     global total_adults
     total_adults = add_together(adults_room1, adults_room2, adults_room3, adults_room4) 
 
-    # to add filter functionality later
-    sort_order = "GUEST_RATING"
+    sort_order = request.form.get('sort-hotels')
 
     # search_location_id defined in helpers.py
     destination_id = search_location_id(destination)
@@ -181,10 +180,9 @@ def list_hotels():
         if output == None:
             return render_template('400.html')
         header = output['header']
-        # a list of hotels
+        # outputs a list of hotels
         hotels = output['hotels']
-        # print(hotels[0])
-        return render_template('hotels.html', header=header, hotels=hotels)
+        return render_template('hotels.html', header=header, hotels=hotels, sort_order=sort_order)
 
 
 @app.route("/hotels/details", methods=['POST'])

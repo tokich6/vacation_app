@@ -33,7 +33,7 @@ footer {
 input[type="date"]::-webkit-calendar-picker-indicator { 
   cursor: pointer;
   color: #3f817e;
-  /* filter: invert(1); */
+  filter: invert(1);
   /* filter: invert(100%) sepia() saturate(1000%) hue-rotate(0deg) */
  }
 

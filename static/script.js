@@ -6,10 +6,10 @@ let slideIndex = 1;
 let rooms = document.querySelector('#rooms');
 let roomsWidget = document.querySelector('.rooms-widget');
 
-
 showSlides(slideIndex);
 
 btn.addEventListener('click', toggleNav);
+
 
 // FUNCTIONS
 
@@ -34,7 +34,7 @@ function showSlides(n) {
       slides[i].style.display = 'none';
       imgNum[i].style.display = 'none';
     }
-    slides[slideIndex - 1].style.display = "block";
+    slides[slideIndex - 1].style.display = 'block';
     imgNum[slideIndex - 1].style.display = 'block';
   }
 }
