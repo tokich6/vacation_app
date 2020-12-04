@@ -12,7 +12,16 @@
     </h1>
 
     <ul class="w-full p-4">
-      {% for booking in bookings %}
+    
+      <form action="{{ url_for('your_bookings') }}" method="GET">
+        <div id="myBtnContainer" class="mb-4">
+          <button type="submit" value="All" name="category" class="{% if args == 'All'%} active {% endif %} btn bg-teal-500  text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Show all </button>
+          <button type="submit" value="Confirmed" name="category" class="{% if args == 'Confirmed'%} active {% endif %} btn bg-teal-500 text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Confirmed </button>
+          <button type="submit" value="Cancelled" name="category" class="{% if args == 'Cancelled'%} active {% endif %} btn bg-teal-500 text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Cancelled </button>
+        </div>  
+      </form>
+
+        {%  for booking in bookings %}
       <h2 class="font-bold mr-1 text-teal-500">
         {{ booking.city_name}}, {{ booking.country_code }}
       </h2>
@@ -86,8 +95,7 @@
           >
             Booking cancelled
           </button>
-          <!-- <p class="italic text-sm text-red-500">(Booking is cancelled)</p> -->
-        
+  
           {% else %}
           <button
             class="bg-teal-500 text-white font-bold py-2 px-4 border-b-4 border-teal-700 rounded opacity-50 cursor-not-allowed"
@@ -129,7 +137,12 @@
           {% endif %}
       </li>
       {% else %}
-      <li class="font-bold text-teal-500 text-center text-lg">
+      {% if args == 'Cancelled' %}
+      <li class="font-bold text-teal-500 text-center text-md">
+        No cancelled bookings found ...
+      </li>
+      {% else %}
+      <li class="font-bold text-teal-500 text-center text-md">
         No bookings found ...
       </li>
       <div class="text-center mt-8">
@@ -138,7 +151,9 @@
           <i class="fas fa-external-link-alt"></i>
         </a>
       </div>
+      {% endif %}
       {% endfor %}
+
     </ul>
   </section>
 </section>

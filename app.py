@@ -1,4 +1,4 @@
-from os import environ
+from os import environ, path, walk
 from datetime import date, timedelta
 from flask import Flask, render_template, request, redirect, session, flash, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
@@ -19,7 +19,7 @@ app = Flask(__name__)
 # Set the sessions' secret key to some random bytes.
 app.secret_key = environ.get('SECRET_KEY')
 
-# define global variables
+# global variables
 check_in = ''
 check_out = ''
 rooms = ''
@@ -250,6 +250,8 @@ def your_bookings():
     cancel_before = today
     booked_on = today
     status = 'Confirmed'
+    # filter by category clicked on (get request)
+    btn_value = request.args.get('category', default='All')
 
     if request.method == 'POST':
         hotel_id = request.form.get('hotel_id')
@@ -274,11 +276,16 @@ def your_bookings():
         db.session.commit()
         # get all bookings from db for current user
         bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
-        flash('Your booking is confirmed', 'success')
+        flash('Your reservation is confirmed', 'success')
         return render_template('your_bookings.html', today=today, bookings=bookings)
     else:
-        bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
-        return render_template('your_bookings.html', today=today, bookings=bookings)
+        if btn_value == 'All':
+            bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
+        elif btn_value == 'Cancelled':
+            bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).filter(Booking.status == 'Cancelled').all()
+        else:
+            bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).filter(Booking.status == 'Confirmed').order_by(Booking.check_in).all()
+        return render_template('your_bookings.html', today=today, bookings=bookings, args=btn_value)
 
 @app.route("/downloads", methods=['POST'])
 @login_required
@@ -433,4 +440,14 @@ def logout():
 
 
 if __name__ == '__main__':
+    # extra_dirs = ['static']
+    # extra_files = extra_dirs[:]
+    # for extra_dir in extra_dirs:
+    #     for dirname, dirs, files in walk(extra_dir):
+    #         for filename in files:
+    #             filename = path.join(dirname, filename)
+    #             if path.isfile(filename):
+    #                 extra_files.append(filename)
+    #                 print(extra_files)
+    # app.run(extra_files=extra_files)
     app.run()
