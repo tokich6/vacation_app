@@ -5,11 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 import pdfkit
 
-# jsonify, 
-# from flask.ext.session import Session
-# from tempfile import mkdtemp
-# from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-
 
 from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len, add_together
 
@@ -130,6 +125,7 @@ def home():
 def list_hotels():
     # extract parameters from the search form
     destination = request.form.get('destination')
+    # need to change all global variables to session variables before production
     global check_in
     check_in = request.form.get('check-in')
     global check_out
@@ -183,7 +179,6 @@ def list_hotels():
         # outputs a list of hotels
         hotels = output['hotels']
         return render_template('hotels.html', header=header, hotels=hotels, sort_order=sort_order)
-
 
 @app.route("/hotels/details", methods=['POST'])
 @login_required
@@ -370,12 +365,10 @@ def register_user():
     else:
         return render_template("register.html")
 
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     # Forget any session user_id
     session.clear()
-    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # get the value of the hidden next url input
         next_url = request.form.get("next")
@@ -412,42 +405,12 @@ def login():
     else:
         return render_template('login.html')
 
-
 @app.route("/logout")
 def logout():
     # Forget any user_id
     session.clear()
     return redirect("/")
 
-# custom templates for error handling - to be added
-
-# @app.errorhandler(404)
-# def not_found():
-#     """Page not found."""
-#     return make_response(render_template("404.html"), 404)
-
-
-# @app.errorhandler(400)
-# def bad_request():
-#     """Bad request."""
-#     return make_response(render_template("400.html"), 400)
-
-
-# @app.errorhandler(500)
-# def server_error():
-#     """Internal server error."""
-#     return make_response(render_template("500.html"), 500)
-
 
 if __name__ == '__main__':
-    # extra_dirs = ['static']
-    # extra_files = extra_dirs[:]
-    # for extra_dir in extra_dirs:
-    #     for dirname, dirs, files in walk(extra_dir):
-    #         for filename in files:
-    #             filename = path.join(dirname, filename)
-    #             if path.isfile(filename):
-    #                 extra_files.append(filename)
-    #                 print(extra_files)
-    # app.run(extra_files=extra_files)
     app.run()
