@@ -2,7 +2,7 @@
 
 Web-based hotel app - using Python, Javascript and SQL
 
-Using [rapidapi](https://rapidapi.com/apidojo/api/hotels4)for hotel data (based on hotels.com API). Register for free and create get your API key if planning on running this project locally.
+Using [rapidapi](https://rapidapi.com/apidojo/api/hotels4) for hotel data (based on hotels.com API). Register for free and create get your API key if planning on running this project locally.
 
 ## Motivation for this project
 
