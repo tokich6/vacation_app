@@ -2,7 +2,7 @@
 
 Web-based hotel app - using Python, Javascript and SQL
 
-Using https://rapidapi.com/apidojo/api/hotels4 for hotel data (based on hotels.com API). Register for free and create get your API key if planning on running this project locally.
+Using [rapidapi](https://rapidapi.com/apidojo/api/hotels4)for hotel data (based on hotels.com API). Register for free and create get your API key if planning on running this project locally.
 
 ## Motivation for this project
 
@@ -20,7 +20,7 @@ That is the  /hotels/details route which displays hotel images from the API as a
 The /booking route is where a final call to the API is made to check room availability before confirmation - the available room name, image, price and booking conditions are dispayed here (the app restricts the availability to the first room offered by the hotel due to limited API calls available for the account used). The user is asked to confirm all details and enter a guest name in order to complete the booking. The details are then sent to a PostgreSQL database. The database contains 2 tables - users and bookings. Flask-SQLAlchemy extension for Flask is utilized in the application. For local development, I've used [Postgres.app](https://postgresapp.com/) and [pgAdmin4](https://www.pgadmin.org/) as a graphical client.
 
 Upon successful reservation, the /account route is displayed listing all bookings made, incl the newly confirmed one. The route also offers the functionality to filter bookings by confirmed or cancelled category. Each booking also offers cancel booking functionality (if refundable) which uses a POST method to send the booking id to the /cancellation route where the booking status is changed from confirmed to cancelled in the database.
-Each confirmed booking also has a download booking voucher functionality as a pdf, utilizing pdfkit. 
+Each confirmed booking also has a download booking voucher functionality as a pdf, utilizing [pdfkit](https://pypi.org/project/pdfkit/). 
 
 The app utilizes [TailwindCSS CDN](https://tailwindcss.com/) - a utility-first CSS framework to achieve its custom designs.
 
