@@ -17,12 +17,12 @@ The app consists of 11 routes alltogether,  3 of which (/register, /login, /logo
 The information needed for the hotels search is gathered on the /index route and the results (available hotels) are then dispalyed on the /hotels route. Each hotel 'card' contains information such as reviews, star rating and prices as well as a link to more information about that specific hotel.
 That is the  /hotels/details route which displays hotel images from the API as a carousel (carousel functionality implemented in JavaScript), additional location details and a link to make a booking. 
 
-The /booking route is where a final call to the API is made to check room availability before confirmation - the available room name, image, price and booking conditions are dispayed here (the app restricts the availability to the first room offered by the hotel due to limited API calls available for the account used). The user is asked to confirm all details and enter a guest name in order to complete the booking. The details are then sent to a PostgreSQL database. The database contains 2 tables - users and bookings. Flask-SQLAlchemy extension for Flask is utilized in the application. For local development, I've used [Postgres.app]('https://postgresapp.com/) and [pgAdmin4]('https://www.pgadmin.org/) as a graphical client.
+The /booking route is where a final call to the API is made to check room availability before confirmation - the available room name, image, price and booking conditions are dispayed here (the app restricts the availability to the first room offered by the hotel due to limited API calls available for the account used). The user is asked to confirm all details and enter a guest name in order to complete the booking. The details are then sent to a PostgreSQL database. The database contains 2 tables - users and bookings. Flask-SQLAlchemy extension for Flask is utilized in the application. For local development, I've used [Postgres.app]('https://postgresapp.com/) and [pgAdmin4]('https://www.pgadmin.org/') as a graphical client.
 
 Upon successful reservation, the /account route is displayed listing all bookings made, incl the newly confirmed one. The route also offers the functionality to filter bookings by confirmed or cancelled category. Each booking also offers cancel booking functionality (if refundable) which uses a POST method to send the booking id to the /cancellation route where the booking status is changed from confirmed to cancelled in the database.
 Each confirmed booking also has a download booking voucher functionality as a pdf, utilizing pdfkit. 
 
-The app utilizes [TailwindCSS CDN]('https://tailwindcss.com/) - a utility-first CSS framework to achieve its custom designs.
+The app utilizes [TailwindCSS CDN]('https://tailwindcss.com/') - a utility-first CSS framework to achieve its custom designs.
 
 The helpers.py file consists of helper functions, e.g. making API calls and others.
 
