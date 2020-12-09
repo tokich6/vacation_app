@@ -43,7 +43,12 @@ pip install pipenv
 pipenv install
 ```
 
-4. Create a .env file in the main directory and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key).
+4. Create a .env file in the main directory of your project and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key). 
+
+```
+SECRET_KEY = 'any random string’
+API_KEY = 'Your API key'
+```
 
 5. To spawn a shell with the virtualenv activated (make sure you're in the projects directory)
 

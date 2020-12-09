@@ -14,16 +14,6 @@ app = Flask(__name__)
 # Set the sessions' secret key to some random bytes.
 app.secret_key = environ.get('SECRET_KEY')
 
-# global variables
-check_in = ''
-check_out = ''
-rooms = ''
-adults_room1 = ''
-adults_room2 = None
-adults_room3 = None
-adults_room4 = None
-total_adults = ''
-
 # DATABASE SETUP START
 ENV = 'dev'
 if ENV == 'dev':
@@ -126,37 +116,29 @@ def list_hotels():
     # extract parameters from the search form
     destination = request.form.get('destination')
     # need to change all global variables to session variables before production
-    global check_in
-    check_in = request.form.get('check-in')
-    global check_out
-    check_out = request.form.get('check-out')
-    global rooms
-    rooms = request.form.get('rooms')
-    global adults_room1
-    adults_room1 = request.form.get('adult1')
-    global adults_room2
-    global adults_room3
-    global adults_room4
-    if rooms == '2':
-        adults_room2 = request.form.get('adult2')
-        adults_room3 = None
-        adults_room4 = None
-    elif rooms == '3':
-        adults_room2 = request.form.get('adult2')
-        adults_room3 = request.form.get('adult3')
-        adults_room4 = None
-    elif rooms == '4':
-        adults_room2 = request.form.get('adult2')
-        adults_room3 = request.form.get('adult3')
-        adults_room4 = request.form.get('adult4')
+    session['check_in'] = request.form.get('check-in')
+    session['check_out'] = request.form.get('check-out')
+    session['rooms'] = request.form.get('rooms')
+    session['adults_room1'] = request.form.get('adult1')
+    if session['rooms'] == '2':
+        session['adults_room2'] = request.form.get('adult2')
+        session['adults_room3'] = None
+        session['adults_room4'] = None
+    elif session['rooms'] == '3':
+        session['adults_room2'] = request.form.get('adult2')
+        session['adults_room3'] = request.form.get('adult3')
+        session['adults_room4'] = None
+    elif session['rooms'] == '4':
+        session['adults_room2'] = request.form.get('adult2')
+        session['adults_room3'] = request.form.get('adult3')
+        session['adults_room4'] = request.form.get('adult4')
     else:
-        adults_room2 = None
-        adults_room3 = None
-        adults_room4 = None    
+        session['adults_room2'] = None
+        session['adults_room3'] = None
+        session['adults_room4'] = None    
     
     # add_together defined in helpers.py
-    global total_adults
-    total_adults = add_together(adults_room1, adults_room2, adults_room3, adults_room4) 
+    session['total_adults'] = add_together(session['adults_room1'], session['adults_room2'], session['adults_room3'], session['adults_room4']) 
 
     sort_order = request.form.get('sort-hotels')
 
@@ -166,12 +148,12 @@ def list_hotels():
     if not destination:
         flash('Please type in a destination', 'error')
         return redirect("/")
-    elif not check_in or not check_out:
+    elif not session['check_in'] or not session['check_out']:
         flash('Please provide a valid check-in and check-out date', 'error')
         return redirect("/")
     else:
         # list_properties defined in helpers.py
-        output = list_properties(destination_id, check_in, check_out, adults_room1, sort_order, adults_room2, adults_room3, adults_room4)
+        output = list_properties(destination_id, session['check_in'], session['check_out'], session['adults_room1'], sort_order, session['adults_room2'], session['adults_room3'], session['adults_room4'])
         # print(output)
         if output == None:
             return render_template('400.html')
@@ -186,7 +168,7 @@ def show_hotel_details():
     # hidden input value in hotels.html
     hotel_id = request.form.get('hotel_id')
     # get_hotel_details function defined in helpers
-    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
+    output_hotel_details = get_hotel_details(hotel_id, session['check_in'], session['check_out'], session['adults_room1'], session['adults_room2'], session['adults_room3'], session['adults_room4'])
     
     if output_hotel_details == None:
         return render_template('500.html')
@@ -220,7 +202,7 @@ def confirm_booking():
     hotel_price = request.form.get('hotel_price')
 
     # contact API to check availability before final booking confirmation
-    output_hotel_details = get_hotel_details(hotel_id, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4)
+    output_hotel_details = get_hotel_details(hotel_id, session['check_in'], session['check_out'], session['adults_room1'], session['adults_room2'], session['adults_room3'], session['adults_room4'])
     if output_hotel_details == None:
         return render_template('500.html')
     hotel_name = output_hotel_details['property_description']['name']
@@ -230,9 +212,9 @@ def confirm_booking():
     country_code = output_hotel_details['property_description']['address']['countryCode']
     best_room = output_hotel_details['first_room']
     # get_days defined in helpers.py
-    stay_duration = get_days(check_in, check_out)
+    stay_duration = get_days(session['check_in'], session['check_out'])
 
-    return render_template('confirm_booking.html', check_in=check_in, check_out=check_out, hotel_rooms=rooms, total_guests=total_adults,
+    return render_template('confirm_booking.html', check_in=session['check_in'], check_out=session['check_out'], hotel_rooms=session['rooms'], total_guests=session['total_adults'],
                                hotel_id=hotel_id, hotel_name=hotel_name, hotel_stars=hotel_stars, hotel_address=hotel_address, hotel_price=hotel_price, room=best_room,
                                stay_duration=stay_duration, city_name=city_name, country_code=country_code)
 
@@ -241,7 +223,7 @@ def confirm_booking():
 def your_bookings():
     today = date.today()
     free_cancellation = False
-    # defaults to today if free cancellation is False
+    # defaults to today's date if free cancellation is False
     cancel_before = today
     booked_on = today
     status = 'Confirmed'
@@ -262,7 +244,7 @@ def your_bookings():
             cancel_before = reduce_str_len(request.form.get('cancel_before')) 
 
         # enter booking details into the database
-        data = Booking(hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4, total_adults, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on)
+        data = Booking(hotel_id, hotel_name, city_name, country_code, session['check_in'], session['check_out'], session['adults_room1'], session['adults_room2'], session['adults_room3'], session['adults_room4'], session['total_adults'], session['rooms'], room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on)
         # get current user id 
         current_user = db.session.query(Profile).filter(Profile.id == session['user_id']).first()
         # assign it to booking entry foreign key
@@ -304,10 +286,12 @@ def cancel_booking():
     booking_id = request.form.get('booking_id')
     booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
     booking_details.status = 'Cancelled'
+    booking_details.total_pay = 0
     db.session.commit()
 
-    bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).all()
-    return render_template('your_bookings.html', today=today, bookings=bookings)
+    bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).filter(Booking.status == 'Cancelled').all()
+    flash('The booking is now cancelled', 'success')
+    return render_template('your_bookings.html', today=today, bookings=bookings, args='Cancelled')
 
 @app.route("/about", methods=['GET'])
 def about():
@@ -367,7 +351,7 @@ def register_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    # Forget any session user_id
+    # Forget all session data
     session.clear()
     if request.method == "POST":
         # get the value of the hidden next url input
@@ -407,7 +391,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # Forget any user_id
+    # Forget all session data
     session.clear()
     return redirect("/")
 
