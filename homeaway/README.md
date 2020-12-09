@@ -28,7 +28,7 @@ The helpers.py file consists of helper functions, e.g. making API calls and othe
 
 ## Installation and running
 
-1. git clone or fork the project source code. Requires Python version of 3.8.
+1. git clone the project source code. Requires Python version of 3.8.
 
 2. install pipenv - creates and manages a virtual environment for your projects as well as adds/removes packages from Pipfile as you install/uninstall packages
 
@@ -36,30 +36,38 @@ The helpers.py file consists of helper functions, e.g. making API calls and othe
 pip install pipenv
 ```
 
-3. cd into the projects directory and install required packages. To initialize a Python 3 virtual environment, run $ pipenv --three.
+3. In order to run the application you need to export an environment variable that tells Flask where to find the application instance:
+
+```
+$ export FLASK_APP=homeaway
+```
+
+4. cd into the projects directory and install required packages. To initialize a Python 3 virtual environment, run $ pipenv --three.
 
 
 ```
 pipenv install
 ```
 
-4. Create a .env file in the main directory of your project and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key). 
+5. Create a .env file in the main directory of your project and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key). 
 
 ```
 SECRET_KEY = 'any random string’
 API_KEY = 'Your API key'
 ```
 
-5. To spawn a shell with the virtualenv activated (make sure you're in the projects directory)
+
+
+6. To spawn a shell with the virtualenv activated (make sure you're in the projects directory)
 
 ```
 pipenv shell
 ```
 
-6. Finally, to run the application 
+7. Finally, to run the application 
 
 ```
-python app.py
+flask run
 ```
 
-7. Open app on localhost http://127.0.0.1:5000/
+8. Open app on localhost http://127.0.0.1:5000/

@@ -1,106 +1,14 @@
-from os import environ, path, walk
+# ROUTES START HERE
+from homeaway import app
 from datetime import date, timedelta
 from flask import Flask, render_template, request, redirect, session, flash, url_for, make_response
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 import pdfkit
 
-
-from helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len, add_together
-
-# Configure application
-app = Flask(__name__)
-
-# Set the sessions' secret key to some random bytes.
-app.secret_key = environ.get('SECRET_KEY')
-
-# DATABASE SETUP START
-ENV = 'dev'
-if ENV == 'dev':
-    app.debug = True
-    # connect to development database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/homeaway'
-else:
-    app.debug = False
-    # connect to production database
-    app.config['SQLALCHEMY_DATABASE_URI'] = ''
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# initialize db
-db = SQLAlchemy(app)
-
-# import models needs to be after db initiliazation
-# from models import Profile, Booking
-
-class Profile(db.Model):
-    __tablename__ = 'profile'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    hash = db.Column(db.Text, nullable=False)
-    bookings = db.relationship('Booking', backref='profile', lazy=True)
-
-    def __init__(self, username, email, hash):
-        self.username = username
-        self.email = email
-        self.hash = hash
-
-class Booking(db.Model):
-    __tablename__ = 'booking'
-     # random booking id 
-    booking_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    # foreign key
-    user_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
-    hotel_id = db.Column(db.Integer)
-    hotel_name = db.Column(db.Text())
-    city_name = db.Column(db.String(100))
-    country_code = db.Column(db.String(20))
-    check_in = db.Column(db.Date)
-    check_out = db.Column(db.Date)
-    adults_room1 = db.Column(db.Integer)
-    adults_room2 = db.Column(db.Integer)
-    adults_room3 = db.Column(db.Integer)
-    adults_room4 = db.Column(db.Integer)
-    total_adults = db.Column(db.Integer)
-    rooms = db.Column(db.Integer)
-    room_name = db.Column(db.Text())
-    total_pay = db.Column(db.Numeric)
-    free_cancellation = db.Column(db.Boolean)
-    cancel_before = db.Column(db.Date)
-    status = db.Column(db.String(20))
-    guest_name = db.Column(db.String(100))
-    booked_on = db.Column(db.Date)
+from homeaway.helpers import search_location_id, list_properties, get_hotel_details, get_hotel_photos, login_required, get_days, str_to_bool, reduce_str_len, add_together
+from homeaway.models import Profile, Booking, db
 
 
-    def __init__(self, hotel_id, hotel_name, city_name, country_code, check_in, check_out, adults_room1, adults_room2, adults_room3, adults_room4, total_adults, rooms, room_name, total_pay, free_cancellation, cancel_before, status, guest_name, booked_on):
-        self.hotel_id = hotel_id
-        self.hotel_name = hotel_name
-        self.city_name = city_name
-        self.country_code = country_code
-        self.check_in = check_in
-        self.check_out = check_out
-        self.adults_room1 = adults_room1
-        self.adults_room2 = adults_room2
-        self.adults_room3 = adults_room3
-        self.adults_room4 = adults_room4
-        self.total_adults = total_adults
-        self.rooms = rooms
-        self.room_name = room_name
-        self.total_pay = total_pay
-        self.free_cancellation = free_cancellation
-        self.cancel_before = cancel_before
-        self.status = status
-        self.guest_name = guest_name
-        self.booked_on = booked_on
-
-
-# create database tables from models
-db.create_all()
-# DATABASE SETUP END
-
-
-# ROUTES START HERE
 @app.route("/")
 @login_required
 def home():
@@ -395,6 +303,3 @@ def logout():
     session.clear()
     return redirect("/")
 
-
-if __name__ == '__main__':
-    app.run()
