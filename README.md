@@ -30,6 +30,10 @@ The helpers.py file consists of helper functions, e.g. making API calls and othe
 
 1. git clone the project source code. Requires Python version of 3.8.
 
+```
+git clone https://github.com/tokich6/vacation_app.git
+```
+
 2. install pipenv - creates and manages a virtual environment for your projects as well as adds/removes packages from Pipfile as you install/uninstall packages
 
 ```
