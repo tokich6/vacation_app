@@ -2,9 +2,10 @@ let navToggle = document.querySelector('.nav');
 let alert = document.querySelector('#alert');
 let btn = document.querySelector('#btn');
 let slideIndex = 1;
-
 let rooms = document.querySelector('#rooms');
 let roomsWidget = document.querySelector('.rooms-widget');
+let checkIn = document.querySelector('#check-in');
+let checkOut = document.querySelector('#check-out');
 
 showSlides(slideIndex);
 
@@ -44,21 +45,32 @@ function plusSlides(n) {
   showSlides(slideIndex += n);
 }
 
+// change checkout date based on checkin date selected
+if (window.location.pathname == '/') {
+  checkIn.onchange = function () {
+    let date;
+    date = new Date(checkIn.value);
+    date.setDate(date.getDate() + 1);
+    checkOut.valueAsDate = date
+  }
+}
+
+
 //dynamic room options
-if (window.location.pathname == '/') { 
+if (window.location.pathname == '/') {
   rooms.onchange = function () {
     roomsValue = rooms.value;
     let roomCollection = roomsWidget.children;
-  
+
     for (let i = 0; i < roomCollection.length; i++) {
       if (i + 1 <= roomsValue) {
         roomCollection[i].classList.remove('hidden');
         roomCollection[i].classList.add('selected');
-        } else {
-            roomCollection[i].classList.remove('selected');
-            roomCollection[i].classList.add('hidden');
-        }
+      } else {
+        roomCollection[i].classList.remove('selected');
+        roomCollection[i].classList.add('hidden');
       }
+    }
   }
 }
 

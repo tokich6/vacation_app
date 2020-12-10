@@ -15,7 +15,7 @@
     
       <form action="{{ url_for('your_bookings') }}" method="GET">
         <div id="myBtnContainer" class="mb-4">
-          <button type="submit" value="All" name="category" class="{% if args == 'All'%} active {% endif %} btn bg-teal-500  text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Show all </button>
+          <button type="submit" value="All" name="category" class="{% if args == 'All'%} active {% endif %} btn bg-teal-500  text-white text-sm font-bold py-2 px-4 mb-1 border-teal-700 hover:border-teal-500 rounded" > Show all </button>
           <button type="submit" value="Confirmed" name="category" class="{% if args == 'Confirmed'%} active {% endif %} btn bg-teal-500 text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Confirmed </button>
           <button type="submit" value="Cancelled" name="category" class="{% if args == 'Cancelled'%} active {% endif %} btn bg-teal-500 text-white text-sm font-bold py-2 px-4 border-teal-700 hover:border-teal-500 rounded" > Cancelled </button>
         </div>  
@@ -59,8 +59,8 @@
             Booked on: <span class="font-bold"> {{ booking.booked_on }} </span>
           </p>
         </div>
-
-        <div>
+        {# check if booking can be cancelled foc #} 
+        <div class="mt-4">
           {% if booking.free_cancellation == True and today <
           booking.cancel_before and booking.status == 'Confirmed' %}
           <form action="{{ url_for('cancel_booking') }}" method="POST">
@@ -106,7 +106,7 @@
           {% endif %} 
           
           {# download pdf confirmation #}
-          {% if booking.status == 'Confirmed' %}
+          {% if booking.status == 'Confirmed' and today <= booking.check_in %}
           <form action="{{ url_for('generate_pdf') }}" method="POST">
             <input
               type="hidden"
@@ -124,7 +124,7 @@
             </div>
           </form>
         </div>
-        {% else %}
+        {% else %} {# download not allowed and delete booking btn available #}
         <div class="pt-2">
           <button
                 class="bg-teal-500 text-white font-bold py-2 px-4 border-b-4 border-teal-700 rounded opacity-50 cursor-not-allowed"
@@ -133,6 +133,22 @@
                 Download confirmation
               </button>
         </div>
+
+        <form action="{{ url_for('delete_booking') }}" method="POST">
+          <input
+            type="hidden"
+            name="booking_id"
+            value="{{booking.booking_id}}"
+          />
+          <div class="pt-2">
+            <button
+              class="bg-teal-500 hover:bg-teal-800 text-white font-bold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded"
+              type="submit"
+            >
+              Delete booking
+            </button>
+          </div>
+        </form>
           
           {% endif %}
       </li>

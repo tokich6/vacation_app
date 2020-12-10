@@ -40,38 +40,41 @@ git clone https://github.com/tokich6/vacation_app.git
 pip install pipenv
 ```
 
-3. In order to run the application you need to export an environment variable that tells Flask where to find the application instance:
+3. In order to run the application you need to export an environment variable that tells Flask where to find the application instance. If you are outside of the project directory make sure to provide the exact path to your application directory.
 
 ```
-$ export FLASK_APP=homeaway
+export FLASK_APP=homeaway
 ```
 
-4. cd into the projects directory and install required packages. To initialize a Python 3 virtual environment, run $ pipenv --three.
+4. Similarly you can turn on the development features like this:
 
+```
+export FLASK_ENV=development
+```
+
+5. cd into the projects directory and install required packages. To initialize a Python 3 virtual environment, run $ pipenv --three.
 
 ```
 pipenv install
 ```
 
-5. Create a .env file in the main directory of your project and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key). 
+6. Create a .env file in the main directory of your project and add SECRET_KEY and API_KEY to it (instructions provided at the beginning of this file on where to register to get an API key). 
 
 ```
 SECRET_KEY = 'any random string’
-API_KEY = 'Your API key'
+API_KEY = 'your API key'
 ```
 
-
-
-6. To spawn a shell with the virtualenv activated (make sure you're in the projects directory)
+7. To spawn a shell with the virtualenv activated (make sure you're in the projects directory)
 
 ```
 pipenv shell
 ```
 
-7. Finally, to run the application 
+8. Finally, to run the application 
 
 ```
 flask run
 ```
 
-8. Open app on localhost http://127.0.0.1:5000/
+9. Open app on localhost http://127.0.0.1:5000/

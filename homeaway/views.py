@@ -9,13 +9,14 @@ from homeaway.helpers import search_location_id, list_properties, get_hotel_deta
 from homeaway.models import Profile, Booking, db
 
 
+today = date.today()
+
 @app.route("/")
 @login_required
 def home():
     # Set min date input for check_in & check_out
-    tomorrow = date.today() + timedelta(days=1)
-    day_after = date.today() + timedelta(days=2)
-    # rooms = get_value(obj)
+    tomorrow = today + timedelta(days=1)
+    day_after = today + timedelta(days=2)
     return render_template('index.html', tomorrow=tomorrow, day_after=day_after)
 
 @app.route("/hotels", methods=['POST'])
@@ -23,7 +24,7 @@ def home():
 def list_hotels():
     # extract parameters from the search form
     destination = request.form.get('destination')
-    # need to change all global variables to session variables before production
+    # use session to save data used across different routes
     session['check_in'] = request.form.get('check-in')
     session['check_out'] = request.form.get('check-out')
     session['rooms'] = request.form.get('rooms')
@@ -129,7 +130,6 @@ def confirm_booking():
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def your_bookings():
-    today = date.today()
     free_cancellation = False
     # defaults to today's date if free cancellation is False
     cancel_before = today
@@ -190,7 +190,7 @@ def generate_pdf():
 @app.route("/cancellation", methods=['POST'])
 @login_required
 def cancel_booking():
-    today = date.today()
+    # today = date.today()
     booking_id = request.form.get('booking_id')
     booking_details = db.session.query(Booking).filter(Booking.booking_id == booking_id).first()
     booking_details.status = 'Cancelled'
@@ -200,6 +200,19 @@ def cancel_booking():
     bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).filter(Booking.status == 'Cancelled').all()
     flash('The booking is now cancelled', 'success')
     return render_template('your_bookings.html', today=today, bookings=bookings, args='Cancelled')
+
+@app.route("/delete", methods=['POST'])
+@login_required
+def delete_booking():
+    # today = date.today()
+    booking_id = request.form.get('booking_id')
+    db.session.query(Booking).filter(Booking.booking_id == booking_id).delete()
+    db.session.commit()
+
+    bookings = db.session.query(Booking).filter(Booking.user_id == session['user_id']).order_by(Booking.check_in).all()
+    flash('The booking has been removed', 'success')
+    return render_template('your_bookings.html', today=today, bookings=bookings)
+
 
 @app.route("/about", methods=['GET'])
 def about():

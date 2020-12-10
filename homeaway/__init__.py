@@ -18,10 +18,12 @@ if ENV == 'dev':
     app.debug = True
     # connect to development database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/homeaway'
+    print('connected to development db')
 else:
     app.debug = False
     # connect to production database
     app.config['SQLALCHEMY_DATABASE_URI'] = ''
+    print('connected to production db')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

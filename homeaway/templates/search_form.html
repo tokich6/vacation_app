@@ -10,7 +10,7 @@
       name="destination"
       id="destination"
     > 
-      <option value="New York">New York</option>
+      <option value="New York" selected> New York</option>
       <option value="Paris"> Paris </option>
       <option value="London">London</option>
       <option value="Miami">Miami</option>
@@ -25,8 +25,13 @@
         class="appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none"
         type="date"
         name="check-in"
+        id="check-in"
         min="{{tomorrow}}"
+        {% if session.check_in %}
+        value="{{ session.check_in }}"
+        {% else %}
         value="{{tomorrow}}"
+        {% endif %}
       />
     </div>
     <div class="check-out-field">
@@ -35,8 +40,13 @@
         class="appearance-none bg-transparent border-none w-full text-gray-600 mr-3 py-1 px-2 leading-tight focus:outline-none"
         type="date"
         name="check-out"
+        id="check-out"
         min="{{day_after}}"
+        {% if session.check_out %}
+        value="{{ session.check_out}}"
+        {% else %}
         value="{{day_after}}"
+        {% endif %}
       />
     </div>
   
@@ -52,8 +62,7 @@
           name="rooms"
           id="rooms"
         >
-        
-          <option value="1">1</option>
+          <option value="1" selected>1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
